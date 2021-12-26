@@ -1,0 +1,143 @@
+.chat {
+    flex-grow: 1;
+}
+
+.chat-settings {
+    border-bottom: 1px solid #c4c4c4;
+    flex-wrap: wrap;
+}
+
+
+.input-label {
+    margin: auto 3px auto 3px;
+}
+
+.chat-settings input {
+    margin: auto;
+}
+
+.chat-settings .ui-button, .chat-functions .ui-button {
+    margin: auto 6px auto 6px;
+    height: 2.0em;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-width: 4em;
+    padding: 3px;
+    text-align: center;
+}
+
+.config-wrapper {
+    margin: auto;
+    padding: 9px;
+}
+
+.reset-wrapper {
+    margin: auto;
+    padding: 9px;
+    border-right: 1px solid #c4c4c4;
+}
+
+
+.chat-menu {
+    min-width: 400px;
+    height: 100%;
+    overflow: auto;
+    resize: horizontal;
+    background: #f9f9f9;
+}
+
+.chat-messages {
+    flex-grow: 1;
+    min-height: 300px;
+}
+
+.chat-functions {
+    border-bottom: 1px solid #c4c4c4;
+    padding: 6px;
+}
+
+.chat-messages-in {
+    height: 1px;
+    flex-grow: 1;
+    min-height: 200px;
+    resize: vertical;
+    overflow: auto;
+}
+
+.messages-out-input {
+    flex-grow: 1;
+    margin: 9px;
+    resize: vertical;
+}
+
+.send-button {
+    margin: 9px;
+}
+
+.send-icon {}
+
+.chat-messages-out {}
+
+.messages-out {
+    border-left: 1px solid #c4c4c4;
+}
+
+.message-wrapper {
+    margin: 9px 9px 0 9px;
+    background: #333;
+    color: white;
+    border-radius: 6px;
+}
+
+.message-timestamp-wrapper {
+    color: #e4e3e3;
+    padding: 3px;
+    border-bottom: 1px solid #444444;
+}
+
+.message-timestamp {}
+
+.chat-messages-in {
+    border: 1px solid #c4c4c4;
+    border-top: none;
+    border-right: none;
+}
+
+.chat-message-out {}
+
+.chat-message {
+    padding: 6px;
+}
+
+.chat-message-system {
+    color: rgb(240, 221, 48);
+    font-weight: 600;
+    padding: 6px;
+}
+
+.config {
+    min-width: 250px;
+}
+
+.baud {
+    width: 75px;
+}
+
+.input-label {
+    font-weight: 600;
+    font-size: 1.5em;
+    padding: 3px;
+}
+
+.port {
+    width: 100px;
+}
+
+.chat-message-text {}
+
+.ui-button:hover {
+    background-color: #d8d8d8;
+}

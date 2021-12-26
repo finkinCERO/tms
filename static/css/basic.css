@@ -1,0 +1,591 @@
+* {
+    margin: 0;
+}
+
+html, body {
+    height: 100%;
+    color: black;
+    font-family: Arial, sans-serif !important;
+    ;
+    font-size: 10pt !important;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+
+.absolute-center {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.function-wrapper {
+    padding: 3px;
+    margin-bottom: 3px;
+    width: 150px;
+}
+
+.function-wrapper label {
+    font-weight: 600;
+    margin-bottom: 1px;
+}
+
+i:hover {
+    color: #696969;
+}
+
+.function-wrapper input {}
+
+input:focus, select:focus, textarea:focus, button:focus, details:focus, summary:focus {
+    outline: none;
+}
+
+.titlePic {
+    float: left;
+    width: auto;
+    height: 1.6em;
+    margin-top: 0.2em;
+    margin-left: 0.2em;
+}
+
+.plugin-title {
+    margin-left: 9px;
+    height: 100%;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.inputExtension {
+    width: 100%;
+}
+
+.input-extension-button {
+    margin-left: 9px;
+}
+
+#shadow {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+    background: gray;
+    opacity: 0.5;
+}
+
+#inputExtensionWrapper {
+    position: absolute;
+    width: 300px;
+    z-index: 11;
+}
+
+#testBox {
+    width: 200px;
+    height: 2em;
+    padding-left: 30%;
+    padding-top: 20%;
+}
+
+.content-wrapper {
+    width: 100%;
+    margin: 0 auto;
+    background-color: #F9F9F9;
+    flex-grow: 1;
+    z-index: auto;
+    overflow: auto;
+    display: flex;
+}
+
+#bigMessage {
+    height: auto;
+    width: auto;
+    margin: auto;
+    position: relative;
+    top: 2.5em;
+    padding-left: 9px;
+    padding-right: 9px;
+    border: 1px solid lightgray;
+    font-size: 15pt;
+}
+
+.big-icon {
+    font-size: 1.5em;
+}
+
+.plugin-components {
+    max-height: 87%;
+}
+
+#mainWindow {
+    background: none;
+    display: flex;
+    flex-direction: column;
+    border-radius: 3px;
+    height: auto;
+    border: 1px solid #a8a8a8;
+    padding: 0.2em;
+    overflow: hidden auto;
+    flex-grow: 1;
+    margin: 9px;
+}
+
+.window-main-sub {
+    height: auto;
+    position: relative;
+    width: auto;
+    background: none;
+    overflow: auto hidden;
+    margin-left: auto;
+    margin-right: auto;
+    max-height: 99%;
+}
+
+.header {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 2.5em;
+    border: 1px solid rgb(245, 239, 239);
+    background: white;
+    -webkit-box-shadow: 0px 2px 22px -10px rgba(31, 31, 31, 1);
+    -moz-box-shadow: 0px 2px 22px -10px rgba(31, 31, 31, 1);
+    box-shadow: 0px 2px 22px -10px rgba(31, 31, 31, 1);
+    z-index: 10 !important;
+    /*DEFAULT: */
+    border: 1px solid #a8a8a8;
+    background: #c4c4c4 url("/sacos/javax.faces.resource/images/ui-bg_highlight-soft_100_c4c4c4_1x100.png.xhtml?ln=primefaces-aristo") 50% 50% repeat-x;
+    background: #c4c4c4 linear-gradient(top, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0));
+    background: #c4c4c4 -webkit-gradient(linear, left top, left bottom, from(rgba(255, 255, 255, 0.8)), to(rgba(255, 255, 255, 0)));
+    background: #c4c4c4 -moz-linear-gradient(top, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0));
+}
+
+.header__logo--left {
+    float: left;
+    position: relative;
+    line-height: 3em;
+    margin-left: 3px;
+}
+
+.header__logo--right {
+    float: right;
+    position: relative;
+    line-height: 3em;
+    margin-right: 3px;
+}
+
+.header img {
+    height: 100%;
+    width: auto;
+    float: left;
+    margin-left: 3px;
+}
+
+#version {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    margin-left: 12px;
+    justify-content: center;
+    color: #474747;
+}
+
+button {
+    cursor: pointer;
+}
+
+.ui-header-widget {
+    height: 2em;
+    font-weight: bold;
+    text-shadow: 0px 1px 0px rgba(255, 255, 255, 0.7);
+    border: 1px solid #a8a8a8;
+    background: #c4c4c4 -webkit-gradient(linear, left top, left bottom, from(rgba(255, 255, 255, 0.8)), to(rgba(255, 255, 255, 0)));
+    background: #c4c4c4 -webkit-linear-gradient(rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0));
+    background: #c4c4c4 -o-linear-gradient(rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0));
+    background: #c4c4c4 linear-gradient(rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0));
+    margin: 2px 2px 5px 2px;
+    border-radius: 3px;
+    display: flex;
+    flex-direction: row;
+}
+
+.footer {
+    padding: 0;
+    width: 100%;
+    flex: 0 0 auto;
+    height: 2em;
+    border: 1px solid rgb(245, 239, 239);
+    background: white;
+    z-index: 1000;
+    opacity: 0.7;
+    /*DEFAULT*/
+    border: 1px solid #a8a8a8;
+    background: #c4c4c4 url("/sacos/javax.faces.resource/images/ui-bg_highlight-soft_100_c4c4c4_1x100.png.xhtml?ln=primefaces-aristo") 50% 50% repeat-x;
+    background: #c4c4c4 linear-gradient(top, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0));
+    background: #c4c4c4 -webkit-gradient(linear, left top, left bottom, from(rgba(255, 255, 255, 0.8)), to(rgba(255, 255, 255, 0)));
+    background: #c4c4c4 -moz-linear-gradient(top, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0));
+}
+
+.header-item {
+    float: left;
+    height: 2.5em;
+    margin-left: 9px;
+}
+
+.navi-title {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 1.2em;
+    letter-spacing: 1.4px;
+    word-spacing: 0px;
+    color: #000000;
+    font-weight: 600;
+    line-height: 2em;
+    margin-left: 9px;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    justify-content: center;
+    height: 100%;
+}
+
+input, select, textarea {
+    height: 31.5px;
+    border-radius: 3px;
+    border: 1px solid rgb(88, 176, 235);
+    padding-left: 3px;
+}
+
+.date-icon {
+    background: white;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    background: white url("../img/date-icon.svg") no-repeat center right;
+    background-size: auto;
+    background-size: contain;
+    background-size: 40px 22px;
+}
+
+.flex-row, .flex-row-left, .flex-row-right, .flex-row-center {
+    display: flex;
+    flex-direction: row;
+}
+
+.flex-row-left {
+    margin-right: auto;
+}
+
+.flex-row-right {
+    margin-left: auto;
+}
+
+.flex-row-center {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.flex-colmn, .flex-column, .flex-colmn-center, .flex-column-center {
+    display: flex !important;
+    flex-direction: column;
+}
+
+.flex-colmn-center, .flex-column-center {
+    justify-content: center;
+}
+
+.flex-center {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.item-box {
+    top: 4em;
+    left: 50%;
+    transform: translate(-50%, 0);
+}
+
+* {
+    margin: 0;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+html, body {
+    height: 100%;
+    color: #2B2929;
+    font-family: Arial, sans-serif;
+    font-size: 10pt;
+}
+
+.window-header {
+    background: #c4c4c4 url("/sacos/javax.faces.resource/images/ui-bg_highlight-soft_100_c4c4c4_1x100.png.xhtml?ln=primefaces-aristo") 50% 50% repeat-x;
+    background: #c4c4c4 linear-gradient(top, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0));
+    background: #c4c4c4 -webkit-gradient(linear, left top, left bottom, from(rgba(255, 255, 255, 0.8)), to(rgba(255, 255, 255, 0)));
+    background: #c4c4c4 -moz-linear-gradient(top, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0));
+    height: 3em;
+    z-index: 100;
+    height: 2.5em;
+    width: auto;
+    line-height: 2.5em;
+    padding-left: 0.5em;
+    color: #29292B;
+    font-weight: bold;
+}
+
+.ui-button {
+    border: 1px solid #a8a8a8;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    color: #2D5972;
+}
+
+.pointer {
+    cursor: pointer;
+}
+
+.icon:hover {
+    color: rgb(4, 116, 180) !important;
+    cursor: pointer;
+    -webkit-transition: all .1s ease-in-out;
+    -moz-transition: all .1s ease-in-out;
+    -o-transition: all .1s ease-in-out;
+    -ms-transition: all .1s ease-in-out;
+    transition: all .1s ease-in-out;
+}
+
+.navi-title {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 1.2em;
+    letter-spacing: 1.4px;
+    word-spacing: 0px;
+    color: #000000;
+    font-weight: 600;
+    line-height: 2em;
+    margin-left: 9px;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    justify-content: center;
+    height: 100%;
+}
+
+.select-wrapper::before {
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    content: "\f078";
+    font-size: 20px;
+    position: absolute;
+    right: 15px;
+    top: 9px;
+    color: #535353;
+    pointer-events: none;
+}
+
+.message-box {
+    word-wrap: break-word;
+    padding: 6px;
+    padding-top: 18px;
+    position: fixed;
+    right: 20px;
+    top: 40px;
+    border: 1px solid rgb(152, 152, 152);
+    border-radius: 5px;
+    min-width: 250px;
+    min-height: 60px;
+    width: auto;
+    z-index: 100;
+    background-color: rgba(0, 0, 0, 0.4);
+    color: white;
+    animation: fadeinout 10s linear forwards;
+    -webkit-animation: fadeinout 10s linear forwards;
+    z-index: 1000000;
+}
+
+.no-pointer {
+    pointer-events: none;
+}
+
+.loader {
+    border: 6px solid #ffffff;
+    border-top-color: rgb(255, 255, 255);
+    border-top-style: solid;
+    border-top-width: 6px;
+    border-top: 6px solid #3498db;
+    border-radius: 50%;
+    width: 1em;
+    height: 1em;
+    -webkit-animation: spin 3s linear infinite;
+    animation: spin 3s linear infinite;
+    margin-top: 0.25em;
+    margin-left: 0.25em;
+}
+
+[disabled] {
+    color: rgb(200, 193, 193) !important;
+}
+
+@-webkit-keyframes spin {
+    0% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+
+    100% {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes spin {
+    0% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+
+    100% {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}
+
+#loaderWrapper {
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+    margin-left: 12px;
+}
+
+.loadMessage {
+    margin-left: 3px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.no-events {
+    pointer-events: none;
+}
+
+.overlay {
+    background: #333333;
+    opacity: 0.5;
+    position: absolute;
+    z-index: 1000;
+    width: 100%;
+    height: 100%;
+}
+
+.overlay-transparent {
+    background: white;
+    opacity: 0.15;
+    position: absolute;
+    z-index: 1000;
+    width: 100%;
+    height: 100%;
+}
+
+.hide {
+    display: none;
+}
+
+.pointer {
+    cursor: pointer;
+}
+
+.item-box, .item-box-popup {
+    position: absolute;
+    z-index: 1001;
+    max-width: 100%;
+}
+
+.margin-left-auto {
+    margin-left: auto;
+}
+
+.item-box-popup {
+    width: 100%;
+    height: 100%;
+}
+
+.freeze-overlay {
+    background: #333;
+    opacity: 0.1;
+    position: absolute;
+    z-index: 1000000;
+    width: 100%;
+    height: 100%;
+}
+
+.svg-background {
+    background-size: auto 100% !important;
+    background-repeat: no-repeat !important;
+    background-position: center !important;
+}
+
+i {
+    cursor: pointer;
+}
+
+.bright-color {
+    color: white;
+}
+
+.overlay-functions i {
+    margin-left: 3px;
+}
+
+.item-box-content, .item-box-content-popup {
+    margin: 3px 1px 0 1px;
+    border: 2px solid #333;
+    border-radius: 3px;
+    background: white;
+    overflow: auto;
+    min-height: 100px;
+}
+
+.item-box-content {
+    max-height: 400px;
+}
+
+.inactive-row {
+    background: #d6d6d6 !important;
+}
+
+input[readonly="true"], select[readonly="true"] {
+    border-color: #949494 !important;
+}
+
+.noselect {
+    -webkit-touch-callout: none;
+    /* iOS Safari */
+    -webkit-user-select: none;
+    /* Safari */
+    -khtml-user-select: none;
+    /* Konqueror HTML */
+    -moz-user-select: none;
+    /* Old versions of Firefox */
+    -ms-user-select: none;
+    /* Internet Explorer/Edge */
+    user-select: none;
+    /* Non-prefixed version, currently
+                                    supported by Chrome, Edge, Opera and Firefox */
+}
+
+.messages-address-input {
+    margin: auto 9px auto 9px;
+}
+
+.messages-address-input-error {
+    border: 1px solid rgb(230, 37, 37);
+}
+
+.messages-address-input-approved {
+    border: 1px solid rgb(33, 233, 33);
+}

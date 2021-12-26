@@ -1,0 +1,48 @@
+.routing-table-wrapper {
+    margin: 9px;
+}
+
+.routing-table-wrapper table {
+    border-collapse: collapse;
+    margin: auto;
+    width: 99%;
+}
+
+.routing-table-wrapper thead {
+    position: sticky;
+}
+
+.routing-table-wrapper tbody {
+    border-collapse: collapse;
+}
+
+.dest-trigger:hover {
+    font-weight: 600;
+}
+
+
+.routing-table-wrapper tr {
+    background: #333;
+    color: white;
+}
+
+.routing-table-wrapper th, .routing-table-wrapper td {
+    padding: 3px;
+    border: 1px solid #c4c4c4;
+
+}
+
+.routing-table-wrapper th {}
+
+.routing-table-wrapper td {}
+
+.table-trigger {
+    font-size: 1.5em;
+    cursor: pointer;
+    user-select: none;
+    padding: 3px;
+}
+
+.table-trigger:hover {
+    font-weight: 600;
+}
