@@ -180,7 +180,9 @@ def send(serial, message, dest, addr=None):
     m = "AT+DEST=" + dest + "\r\n"
     if(addr != None):
         rType = haveRoute(addr)
+    
     serial.write(m.encode())
+    sleep(0.1)
     if verify_status(serial):
         print("# length\t\t->\t"+str(len(message)))
         sendMode = "AT+SEND="+str(len(message))+"\r\n"
@@ -451,6 +453,7 @@ def clientMsg(serial, request):
         write_log("existing route")
     else:
         req = Rreq(255, ADDRESS, getRequestId(), request["destination"], 0, ADDRESS, getSeqNumber())
+        send(serial,req.toBase64(),"fffff")
         write_log("not existing route")
         # send route request to from
 

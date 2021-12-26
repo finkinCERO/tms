@@ -1,476 +1,0 @@
-# start server
-# client request		->	{"name":"init","uId":"fp4jlsgngwkxj77muf","token":null,"application":null,"domain":null}
-
-# handle client messages	->	{"name":"init","uId":"fp4jlsgngwkxj77muf","token":null,"application":null,"domain":null}
-
-# open-session
-# [sending std out]:	{"name": "init", "address": "111", "port": "/dev/ttyS0", "baud": 115200}
-# NO ACTION
-# client request		->	{"name":"reset-module","baud":115200,"port":"/dev/ttyS0"}
-
-# initalizing module	port: /dev/ttyS0	baud:115200
-# module initialized # baud	115200# port	/dev/ttyS0
-# [sending std out]:	{"name": "reset", "status": "success", "message": "serial module initialized:"}
-# NO ACTION
-# client request		->	{"name":"set-config","config":"433000000,5,6,12,4,1,0,0,0,0,3000,8,8","address":"111"}
-
-# adress setted to		->	AT+ADDR=111
-
-# read message			->	b'AT,OK\r\n'
-# all fine:	 AT OK
-# set config			->	AT+CFG=433000000,5,6,12,4,1,0,0,0,0,3000,8,8
-
-# [sending std out]:	{"name": "set-config", "status": "success", "message": "set config:", "address": null}
-# read message			->	b'AT,OK\r\n'
-# all fine:	 AT OK
-# check:	True# SERIAL:	/dev/ttyS0# True
-# [sending std out]:	{"name": "routing-table", "data": [{"destination": "111", "nextHop": "111", "precursors": "", "metric": 0, "sequenceNumber": 0, "isValid": true}]}
-# route added
-# set RX
-# in waiting
-# read message			->	b'AT,OK\r\n'
-# [sending std out]:	{"name": "message", "message": "AT,OK\r\n"}
-# programm stopped with exception ...
-# Shutdown requested via console
-# start server
-# client request		->	{"name":"init","uId":"rrasijr9zvdkxj7gvwi","token":null,"application":null,"domain":null}
-
-# handle client messages	->	{"name":"init","uId":"rrasijr9zvdkxj7gvwi","token":null,"application":null,"domain":null}
-
-# open-session
-# [sending std out]:	{"name": "init", "address": "111", "port": "/dev/ttyS0", "baud": 115200}
-# NO ACTION
-# client request		->	{"name":"reset-module","baud":115200,"port":"/dev/ttyS0"}
-
-# initalizing module	port: /dev/ttyS0	baud:115200
-# module initialized # baud	115200# port	/dev/ttyS0
-# [sending std out]:	{"name": "reset", "status": "success", "message": "serial module initialized:"}
-# NO ACTION
-# client request		->	{"name":"set-config","config":"433000000,5,6,12,4,1,0,0,0,0,3000,8,8","address":"111"}
-
-# adress setted to		->	AT+ADDR=111
-
-# read message			->	b'AT,OK\r\n'
-# all fine:	 AT OK
-# set config			->	AT+CFG=433000000,5,6,12,4,1,0,0,0,0,3000,8,8
-
-# [sending std out]:	{"name": "set-config", "status": "success", "message": "set config:", "address": null}
-# read message			->	b'AT,OK\r\n'
-# all fine:	 AT OK
-# check:	True# SERIAL:	/dev/ttyS0# True
-# [sending std out]:	{"name": "routing-table", "data": [{"destination": "111", "nextHop": "111", "precursors": "", "metric": 0, "sequenceNumber": 0, "isValid": true}]}
-# route added
-# set RX
-# in waiting
-# read message			->	b'AT,OK\r\n'
-# [sending std out]:	{"name": "message", "message": "AT,OK\r\n"}
-# client request		->	{"name":"reset-module","baud":115200,"port":"/dev/sdf"}
-
-# initalizing module	port: /dev/sdf	baud:115200
-# [sending std out]:	{"name": "error", "message": "Error occured during initialisation, please check port permissions of host, port name or if valid baudrate is setted"}
-# [sending std out]:	{"name": "reset", "status": "success", "message": "serial module initialized:"}
-# NO ACTION
-# client request		->	{"name":"set-config","config":"433000000,5,6,12,4,1,0,0,0,0,3000,8,8","address":"111"}
-
-# config failed
-# [sending std out]:	{"name": "set-config", "status": "success", "message": "set config:", "address": null}
-# programm stopped with exception ...
-# start server
-# client request		->	{"name":"init","uId":"ur2wy5y9nckxj7j9r7","token":null,"application":null,"domain":null}
-
-# handle client messages	->	{"name":"init","uId":"ur2wy5y9nckxj7j9r7","token":null,"application":null,"domain":null}
-
-# open-session
-# [sending std out]:	{"name": "init", "address": "111", "port": "/dev/ttyS0", "baud": 115200}
-# NO ACTION
-# client request		->	{"name":"reset-module","baud":115200,"port":"/dev/ttyS0"}
-
-# initalizing module	port: /dev/ttyS0	baud:115200
-# module initialized # baud	115200# port	/dev/ttyS0
-# [sending std out]:	{"name": "reset", "status": "success", "message": "serial module initialized:"}
-# NO ACTION
-# client request		->	{"name":"set-config","config":"433000000,5,6,12,4,1,0,0,0,0,3000,8,8","address":"111"}
-
-# adress setted to		->	AT+ADDR=111
-
-# read message			->	b'AT,OK\r\n'
-# all fine:	 AT OK
-# set config			->	AT+CFG=433000000,5,6,12,4,1,0,0,0,0,3000,8,8
-
-# [sending std out]:	{"name": "set-config", "status": "success", "message": "set config:", "address": null}
-# read message			->	b'AT,OK\r\n'
-# all fine:	 AT OK
-# check:	True# SERIAL:	/dev/ttyS0# True
-# [sending std out]:	{"name": "routing-table", "data": [{"destination": "111", "nextHop": "111", "precursors": "", "metric": 0, "sequenceNumber": 0, "isValid": true}]}
-# route added
-# set RX
-# in waiting
-# read message			->	b'AT,OK\r\n'
-# [sending std out]:	{"name": "message", "message": "AT,OK\r\n"}
-# client request		->	{"name":"reset-module","baud":115200,"port":"/dev/sdf"}
-
-# initalizing module	port: /dev/sdf	baud:115200
-# [sending std out]:	{"name": "error", "message": "Error occured during initialisation, please check port permissions of host, port name or if valid baudrate is setted"}
-# NO ACTION
-# client request		->	{"name":"set-config","config":"433000000,5,6,12,4,1,0,0,0,0,3000,8,8","address":"111"}
-
-# NO ACTION
-# NO ACTION
-# NO ACTION
-# NO ACTION
-# NO ACTION
-# NO ACTION
-# NO ACTION
-# NO ACTION
-# NO ACTION
-# programm stopped with exception ...
-# Shutdown requested via console
-# start server
-# client request		->	{"name":"init","uId":"a2kgsabraqmkxj7jgku","token":null,"application":null,"domain":null}
-
-# handle client messages	->	{"name":"init","uId":"a2kgsabraqmkxj7jgku","token":null,"application":null,"domain":null}
-
-# open-session
-# [sending std out]:	{"name": "init", "address": "111", "port": "/dev/ttyS0", "baud": 115200}
-# NO ACTION
-# client request		->	{"name":"reset-module","baud":115200,"port":"/dev/ttyS0"}
-
-# initalizing module	port: /dev/ttyS0	baud:115200
-# module initialized # baud	115200# port	/dev/ttyS0
-# [sending std out]:	{"name": "reset", "status": "success", "message": "serial module initialized:"}
-# NO ACTION
-# client request		->	{"name":"set-config","config":"433000000,5,6,12,4,1,0,0,0,0,3000,8,8","address":"111"}
-
-# adress setted to		->	AT+ADDR=111
-
-# read message			->	b'AT,OK\r\n'
-# all fine:	 AT OK
-# set config			->	AT+CFG=433000000,5,6,12,4,1,0,0,0,0,3000,8,8
-
-# [sending std out]:	{"name": "set-config", "status": "success", "message": "set config:", "address": null}
-# read message			->	b'AT,OK\r\n'
-# all fine:	 AT OK
-# check:	True# SERIAL:	/dev/ttyS0# True
-# [sending std out]:	{"name": "routing-table", "data": [{"destination": "111", "nextHop": "111", "precursors": "", "metric": 0, "sequenceNumber": 0, "isValid": true}]}
-# route added
-# set RX
-# in waiting
-# read message			->	b'AT,OK\r\n'
-# [sending std out]:	{"name": "message", "message": "AT,OK\r\n"}
-# client request		->	{"name":"reset-module","baud":1,"port":"/dev/ttyS0"}
-
-# initalizing module	port: /dev/ttyS0	baud:1
-# module initialized # baud	1# port	/dev/ttyS0
-# [sending std out]:	{"name": "reset", "status": "success", "message": "serial module initialized:"}
-# NO ACTION
-# client request		->	{"name":"set-config","config":"433000000,5,6,12,4,1,0,0,0,0,3000,8,8","address":"111"}
-
-# adress setted to		->	AT+ADDR=111
-
-# read message			->	b'AT,OK\r\n'
-# all fine:	 AT OK
-# set config			->	AT+CFG=433000000,5,6,12,4,1,0,0,0,0,3000,8,8
-
-# [sending std out]:	{"name": "set-config", "status": "success", "message": "set config:", "address": null}
-# read message			->	b'AT,OK\r\n'
-# all fine:	 AT OK
-# check:	True# SERIAL:	/dev/ttyS0# True
-# [sending std out]:	{"name": "routing-table", "data": [{"destination": "111", "nextHop": "111", "precursors": "", "metric": 0, "sequenceNumber": 0, "isValid": true}]}
-# route added
-# set RX
-# in waiting
-# read message			->	b'AT,OK\r\n'
-# [sending std out]:	{"name": "message", "message": "AT,OK\r\n"}
-# programm stopped with exception ...
-# Shutdown requested via console
-# start server
-# client request		->	{"name":"init","uId":"iejaprm8hekxj7m94i","token":null,"application":null,"domain":null}
-
-# handle client messages	->	{"name":"init","uId":"iejaprm8hekxj7m94i","token":null,"application":null,"domain":null}
-
-# open-session
-# [sending std out]:	{"name": "init", "address": "111", "port": "/dev/ttyS0", "baud": 115200}
-# NO ACTION
-# client request		->	{"name":"reset-module","baud":115200,"port":"/dev/ttyS0"}
-
-# initalizing module	port: /dev/ttyS0	baud:115200
-# module initialized # baud	115200# port	/dev/ttyS0
-# [sending std out]:	{"name": "reset", "status": "success", "message": "serial module initialized:"}
-# NO ACTION
-# client request		->	{"name":"set-config","config":"433000000,5,6,12,4,1,0,0,0,0,3000,8,8","address":"111"}
-
-# adress setted to		->	AT+ADDR=111
-
-# read message			->	b'AT,OK\r\n'
-# all fine:	 AT OK
-# set config			->	AT+CFG=433000000,5,6,12,4,1,0,0,0,0,3000,8,8
-
-# [sending std out]:	{"name": "set-config", "status": "success", "message": "set config:", "address": null}
-# read message			->	b'AT,OK\r\n'
-# all fine:	 AT OK
-# check:	True# SERIAL:	/dev/ttyS0# True
-# [sending std out]:	{"name": "routing-table", "data": [{"destination": "111", "nextHop": "111", "precursors": "", "metric": 0, "sequenceNumber": 0, "isValid": true}]}
-# route added
-# set RX
-# in waiting
-# read message			->	b'AT,OK\r\n'
-# [sending std out]:	{"name": "message", "message": "AT,OK\r\n"}
-# client request		->	{"name":"reset-module","baud":115200,"port":"/dev/ttyS00"}
-
-# initalizing module	port: /dev/ttyS00	baud:115200
-# [sending std out]:	{"name": "error", "message": "Error occured during initialisation, please check port permissions of host, port name or if valid baudrate is setted"}
-# NO ACTION
-# client request		->	{"name":"set-config","config":"433000000,5,6,12,4,1,0,0,0,0,3000,8,8","address":"111"}
-
-# NO ACTION
-# NO ACTION
-# NO ACTION
-# NO ACTION
-# NO ACTION
-# NO ACTION
-# NO ACTION
-# NO ACTION
-# client request		->	{"name":"reset-module","baud":115200,"port":"/dev/ttyS0"}
-
-# initalizing module	port: /dev/ttyS0	baud:115200
-# module initialized # baud	115200# port	/dev/ttyS0
-# [sending std out]:	{"name": "reset", "status": "success", "message": "serial module initialized:"}
-# NO ACTION
-# client request		->	{"name":"set-config","config":"433000000,5,6,12,4,1,0,0,0,0,3000,8,8","address":"111"}
-
-# adress setted to		->	AT+ADDR=111
-
-# read message			->	b'AT,OK\r\n'
-# all fine:	 AT OK
-# set config			->	AT+CFG=433000000,5,6,12,4,1,0,0,0,0,3000,8,8
-
-# [sending std out]:	{"name": "set-config", "status": "success", "message": "set config:", "address": null}
-# read message			->	b'AT,OK\r\n'
-# all fine:	 AT OK
-# check:	True# SERIAL:	/dev/ttyS0# True
-# [sending std out]:	{"name": "routing-table", "data": [{"destination": "111", "nextHop": "111", "precursors": "", "metric": 0, "sequenceNumber": 0, "isValid": true}]}
-# route added
-# set RX
-# in waiting
-# read message			->	b'AT,OK\r\n'
-# [sending std out]:	{"name": "message", "message": "AT,OK\r\n"}
-# client request		->	{"name":"set-config","config":"","address":"111"}
-
-# adress setted to		->	AT+ADDR=111
-
-# read message			->	b'AT,OK\r\n'
-# all fine:	 AT OK
-# set config			->	AT+CFG=
-
-# [sending std out]:	{"name": "set-config", "status": "success", "message": "set config:", "address": null}
-# read message			->	b'AT,OK\r\n'
-# all fine:	 AT OK
-# check:	True# SERIAL:	/dev/ttyS0# True
-# [sending std out]:	{"name": "routing-table", "data": [{"destination": "111", "nextHop": "111", "precursors": "", "metric": 0, "sequenceNumber": 0, "isValid": true}]}
-# route added
-# set RX
-# in waiting
-# read message			->	b'AT,OK\r\n'
-# [sending std out]:	{"name": "message", "message": "AT,OK\r\n"}
-# client request		->	{"name":"reset-module","baud":115200,"port":"/dev/ttyS0"}
-
-# initalizing module	port: /dev/ttyS0	baud:115200
-# module initialized # baud	115200# port	/dev/ttyS0
-# [sending std out]:	{"name": "reset", "status": "success", "message": "serial module initialized:"}
-# NO ACTION
-# client request		->	{"name":"set-config","config":"433000000,5,6,12,4,1,0,0,0,0,3000,8,8","address":"111"}
-
-# adress setted to		->	AT+ADDR=111
-
-# read message			->	b'AT,OK\r\n'
-# all fine:	 AT OK
-# set config			->	AT+CFG=433000000,5,6,12,4,1,0,0,0,0,3000,8,8
-
-# [sending std out]:	{"name": "set-config", "status": "success", "message": "set config:", "address": null}
-# read message			->	b'AT,OK\r\n'
-# all fine:	 AT OK
-# check:	True# SERIAL:	/dev/ttyS0# True
-# [sending std out]:	{"name": "routing-table", "data": [{"destination": "111", "nextHop": "111", "precursors": "", "metric": 0, "sequenceNumber": 0, "isValid": true}]}
-# route added
-# set RX
-# in waiting
-# read message			->	b'AT,OK\r\n'
-# [sending std out]:	{"name": "message", "message": "AT,OK\r\n"}
-# client request		->	{"name":"reset-module","baud":115200,"port":"/dev/ttyS0"}
-
-# initalizing module	port: /dev/ttyS0	baud:115200
-# module initialized # baud	115200# port	/dev/ttyS0
-# [sending std out]:	{"name": "reset", "status": "success", "message": "serial module initialized:"}
-# NO ACTION
-# client request		->	{"name":"set-config","config":"433000000,5,6,12,4,1,0,0,0,0,3000,8,8","address":"111"}
-
-# adress setted to		->	AT+ADDR=111
-
-# read message			->	b'AT,OK\r\n'
-# all fine:	 AT OK
-# set config			->	AT+CFG=433000000,5,6,12,4,1,0,0,0,0,3000,8,8
-
-# [sending std out]:	{"name": "set-config", "status": "success", "message": "set config:", "address": null}
-# read message			->	b'AT,OK\r\n'
-# all fine:	 AT OK
-# check:	True# SERIAL:	/dev/ttyS0# True
-# [sending std out]:	{"name": "routing-table", "data": [{"destination": "111", "nextHop": "111", "precursors": "", "metric": 0, "sequenceNumber": 0, "isValid": true}]}
-# route added
-# set RX
-# in waiting
-# read message			->	b'AT,OK\r\n'
-# [sending std out]:	{"name": "message", "message": "AT,OK\r\n"}
-# programm stopped with exception ...
-# Shutdown requested via console
-# start server
-# client request		->	{"name":"init","uId":"de9mc3to9fkxj7ov0c","token":null,"application":null,"domain":null}
-
-# handle client messages	->	{"name":"init","uId":"de9mc3to9fkxj7ov0c","token":null,"application":null,"domain":null}
-
-# open-session
-# [sending std out]:	{"name": "init", "address": "111", "port": "/dev/ttyS0", "baud": 115200}
-# NO ACTION
-# client request		->	{"name":"reset-module","baud":115200,"port":"/dev/ttyS0"}
-
-# initalizing module	port: /dev/ttyS0	baud:115200
-# module initialized # baud	115200# port	/dev/ttyS0
-# [sending std out]:	{"name": "reset", "status": "success", "message": "serial module initialized:"}
-# NO ACTION
-# client request		->	{"name":"set-config","config":"433000000,5,6,12,4,1,0,0,0,0,3000,8,8","address":"111"}
-
-# adress setted to		->	AT+ADDR=111
-
-# read message			->	b'AT,OK\r\n'
-# all fine:	 AT OK
-# set config			->	AT+CFG=433000000,5,6,12,4,1,0,0,0,0,3000,8,8
-
-# [sending std out]:	{"name": "set-config", "status": "success", "message": "set config:", "address": null}
-# read message			->	b'AT,OK\r\n'
-# all fine:	 AT OK
-# check:	True# SERIAL:	/dev/ttyS0# True
-# [sending std out]:	{"name": "routing-table", "data": [{"destination": "111", "nextHop": "111", "precursors": "", "metric": 0, "sequenceNumber": 0, "isValid": true}]}
-# route added
-# set RX
-# in waiting
-# read message			->	b'AT,OK\r\n'
-# [sending std out]:	{"name": "message", "message": "AT,OK\r\n"}
-# programm stopped with exception ...
-# Shutdown requested via console
-# start server
-# client request		->	{"name":"init","uId":"huvq6a7dvkkxj7ranb","token":null,"application":null,"domain":null}
-
-# handle client messages	->	{"name":"init","uId":"huvq6a7dvkkxj7ranb","token":null,"application":null,"domain":null}
-
-# open-session
-# [sending std out]:	{"name": "init", "address": "111", "port": "/dev/ttyS0", "baud": 115200}
-# NO ACTION
-# client request		->	{"name":"reset-module","baud":115200,"port":"/dev/ttyS0"}
-
-# initalizing module	port: /dev/ttyS0	baud:115200
-# module initialized # baud	115200# port	/dev/ttyS0
-# [sending std out]:	{"name": "reset", "status": "success", "message": "serial module initialized:"}
-# NO ACTION
-# client request		->	{"name":"set-config","config":"433000000,5,6,12,4,1,0,0,0,0,3000,8,8","address":"111"}
-
-# adress setted to		->	AT+ADDR=111
-
-# read message			->	b'AT,OK\r\n'
-# all fine:	 AT OK
-# set config			->	AT+CFG=433000000,5,6,12,4,1,0,0,0,0,3000,8,8
-
-# [sending std out]:	{"name": "set-config", "status": "success", "message": "set config:", "address": null}
-# read message			->	b'AT,OK\r\n'
-# all fine:	 AT OK
-# check:	True# SERIAL:	/dev/ttyS0# True
-# [sending std out]:	{"name": "routing-table", "data": [{"destination": "111", "nextHop": "111", "precursors": "", "metric": 0, "sequenceNumber": 0, "isValid": true}]}
-# route added
-# set RX
-# in waiting
-# read message			->	b'AT,OK\r\n'
-# [sending std out]:	{"name": "message", "message": "AT,OK\r\n"}
-# programm stopped with exception ...
-# Shutdown requested via console
-# start server
-# client request		->	{"name":"init","uId":"qeq46p97pnpkxj7rgeo","token":null,"application":null,"domain":null}
-
-# handle client messages	->	{"name":"init","uId":"qeq46p97pnpkxj7rgeo","token":null,"application":null,"domain":null}
-
-# open-session
-# [sending std out]:	{"name": "init", "address": "111", "port": "/dev/ttyS0", "baud": 115200}
-# NO ACTION
-# client request		->	{"name":"reset-module","baud":115200,"port":"/dev/ttyS0"}
-
-# initalizing module	port: /dev/ttyS0	baud:115200
-# module initialized # baud	115200# port	/dev/ttyS0
-# [sending std out]:	{"name": "reset", "status": "success", "message": "serial module initialized:"}
-# NO ACTION
-# client request		->	{"name":"set-config","config":"433000000,5,6,12,4,1,0,0,0,0,3000,8,8","address":"111"}
-
-# adress setted to		->	AT+ADDR=111
-
-# read message			->	b'AT,OK\r\n'
-# all fine:	 AT OK
-# set config			->	AT+CFG=433000000,5,6,12,4,1,0,0,0,0,3000,8,8
-
-# [sending std out]:	{"name": "set-config", "status": "success", "message": "set config:", "address": null}
-# read message			->	b'AT,OK\r\n'
-# all fine:	 AT OK
-# check:	True# SERIAL:	/dev/ttyS0# True
-# [sending std out]:	{"name": "routing-table", "data": [{"destination": "111", "nextHop": "111", "precursors": "", "metric": 0, "sequenceNumber": 0, "isValid": true}]}
-# route added
-# set RX
-# in waiting
-# read message			->	b'AT,OK\r\n'
-# [sending std out]:	{"name": "message", "message": "AT,OK\r\n"}
-# programm stopped with exception ...
-# Shutdown requested via console
-# start server
-# client request		->	{"name":"init","uId":"radhrqv5ql8kxjfq0l4","token":null,"application":null,"domain":null}
-
-# handle client messages	->	{"name":"init","uId":"radhrqv5ql8kxjfq0l4","token":null,"application":null,"domain":null}
-
-# open-session
-# [sending std out]:	{"name": "init", "address": "111", "port": "/dev/ttyS0", "baud": 115200}
-# NO ACTION
-# client request		->	{"name":"reset-module","baud":115200,"port":"/dev/ttyS0"}
-
-# initalizing module	port: /dev/ttyS0	baud:115200
-# module initialized # baud	115200# port	/dev/ttyS0
-# [sending std out]:	{"name": "reset", "status": "success", "message": "serial module initialized:"}
-# NO ACTION
-# client request		->	{"name":"set-config","config":"433000000,5,6,12,4,1,0,0,0,0,3000,8,8","address":"111"}
-
-# adress setted to		->	AT+ADDR=111
-
-# read message			->	b'AT,OK\r\n'
-# all fine:	 AT OK
-# set config			->	AT+CFG=433000000,5,6,12,4,1,0,0,0,0,3000,8,8
-
-# [sending std out]:	{"name": "set-config", "status": "success", "message": "set config:", "address": null}
-# read message			->	b'AT,OK\r\n'
-# all fine:	 AT OK
-# check:	True# SERIAL:	/dev/ttyS0# True
-# [sending std out]:	{"name": "routing-table", "data": [{"destination": "111", "nextHop": "111", "precursors": "", "metric": 0, "sequenceNumber": 0, "isValid": true}]}
-# route added
-# set RX
-# in waiting
-# read message			->	b'AT,OK\r\n'
-# [sending std out]:	{"name": "message", "message": "AT,OK\r\n"}
-# client request		->	{"name":"client-message","message":"sd","destination":"22"}
-
-# handle client messages	->	{"name":"client-message","message":"sd","destination":"22"}
-
-# check if route to 22 exists
-not existing route
-# check if route to 22 exists
-# route found:		False
-# read message			->	b'AT,OK\r\n'
-# all fine:	 AT OK
-# [set send mode]:	AT+SEND=2
-# [message]		->	sd
-# read message			->	b'AT,OK\r\n'
-# all fine:	 AT OK
-# read message			->	b'AT,SENDED\r\n'
-# sended
-# programm stopped with exception ...
-# Shutdown requested via console
