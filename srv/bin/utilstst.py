@@ -1,13 +1,13 @@
 #!/usr/bin/python3.8
 import os
 import json
-from .packets.rreq import Rreq
+from packets.rreq import Rreq
 import base64
-from .packets.rrep import Rrep
-from .packets.msg import Msg
-from .packets.rerr import Rerr
-from .packets.ack import Ack
-from .packets.packets import Packets
+from packets.rrep import Rrep
+from packets.msg import Msg
+from packets.rerr import Rerr
+from packets.ack import Ack
+from packets.packets import Packets
 dirname = os.path.dirname(__file__)
 log_file = os.path.join(dirname, '../log/service.log')
 
@@ -23,6 +23,16 @@ def write_log(msg):
     f.close()
 
 
+def toBinary(txt):
+    l, m = [], []
+    for i in txt:
+        l.append(ord(i))
+    for i in l:
+        m.append(int(bin(i)[2:]))
+    return m
+
+
+
 def prepareRouteRequest(obj):
     """[summary]
 
@@ -32,6 +42,7 @@ def prepareRouteRequest(obj):
     print()
 
     # return
+
 
     
 
@@ -48,6 +59,7 @@ def encodeBase64(int_arr):
     result = base64.b64encode(byte_arr)
     print(result)
     return result
+
 
 
 def create_reply_from_binary(binary):
@@ -78,7 +90,7 @@ def parse_packet(int_arr, payload=None):
         obj = Msg(int_arr[1], int_arr[2], int_arr[3],
                   int_arr[4], int_arr[5], payload)
 
-        write_log("= parsing msg: "+str(obj.toDict()))
+        print("= parsing msg: "+str(obj.toDict()))
     elif _type == 4:
         # ack
         print("parsing ack")
