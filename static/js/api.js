@@ -66,7 +66,11 @@ function wss_onmessage(evt) {
         } else if (response.name == "service-message") {
             chat.renderMessage(response.message, "in")
         }
-        else if (response.name == "message") chat.renderMessage(response.message, "in")
+
+        else if (response.name == "message") {
+            console.log("response text:", response.text)
+            chat.renderMessage(`from: ${response.prevHopAddress}, to: ${response.destinationAddress} | message: ${response.text}`, "in")
+        }
         else if (response.name == "set-config")
             chat.renderMessage(`${response.message} ${response.status}`, "system")
         else if (response.name == "reset") {
@@ -76,9 +80,12 @@ function wss_onmessage(evt) {
             chat.renderRoutingTableRows(response.data)
         } else if (response.name == "reverse-routing-table") {
             chat.renderReverseRoutingTableRows(response.data)
-        }  else if (response.name == "error") {
+        } else if (response.name == "error") {
             chat.renderMessage(`${response.message}`, "system")
             chat.functionbar.dispatchEvent(new Event("config"))
+        } else if (response.name == "system-message") {
+            console.log("# sytem message");
+            chat.renderMessage(`${response.message}`, "system")
         }
 
     } catch (e) {

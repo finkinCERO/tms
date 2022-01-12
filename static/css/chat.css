@@ -43,7 +43,6 @@
 
 .chat-menu {
     min-width: 400px;
-    height: 100%;
     overflow: auto;
     resize: horizontal;
     background: #f9f9f9;

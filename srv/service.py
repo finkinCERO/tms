@@ -11,26 +11,31 @@ import serial
 import random
 import time
 import select
-from bin.packets import packets as Packets
-
-from bin.packets import rreq as Rreq
-
+from bin.utils import create_reply_from_binary, parse_packet, encodeBase64, decodeBase64, write_log
+from bin.packets.rreq import Rreq
+import time
+from bin.packets.rrep import Rrep
+from bin.packets.msg import Msg
+from bin.packets.rerr import Rerr
+from bin.packets.ack import Ack
+from bin.packets.packets import Packets
 user = None
 CONFIG = "433000000,5,6,12,4,1,0,0,0,0,3000,8,8"
 ADDRESS = "111"
-_serial = None
+SERIAL = None
 BAUD = 115200
 PORT = "/dev/ttyS0"
 ROUTES = []
 REVERSEROUTES = []
 SEQ_NUM = 0
-DEST_SEQ_NUM = 0
-REQ_ID = 0
-PACKETS = Packets
+DEST_SEQ_NUM = -1
+REQ_ID = -1
+ACTIVE_REQUESTS = {"rreq": [], "rrep": [], "msg": [], "ack": [], "rerr": []}
+MSG_ID = -1
 
 
-def saveFile(path, data):
-    _path = getPathToObjects() + "obj/export/"+path
+def save_file(path, data):
+    _path = get_path_to_objects() + "obj/export/"+path
     with open(_path, 'w') as f:
         json.dump(data, f)
 
@@ -38,40 +43,13 @@ def saveFile(path, data):
 # --- --------------------------------------------------------------------------
 
 
-class session:
-    uuid = ""
+# --- --------------------------------------------------------------------------
 
-    def __init__(self, uuid):
-        self.uuid = uuid
 
 # --- --------------------------------------------------------------------------
 
 
-class message_object:
-    name = ""
-    message = ""
-
-    def __init__(self, name, message):
-        self.name = name
-        self.message = message
-
-
-# --- --------------------------------------------------------------------------
-dirname = os.path.dirname(__file__)
-log_file = os.path.join(dirname, 'log/service.log')
-
-
-def write_log(msg):
-    global log_file
-    f = open(log_file, "a+")
-    f.write(msg+'\n')
-    f.flush()
-    f.close()
-
-# --- --------------------------------------------------------------------------
-
-
-def sendOut(msg):
+def send_out(msg):
     """
     sends message trough std out, websocket daemon
     can pass to frontend connection
@@ -82,7 +60,7 @@ def sendOut(msg):
     :rtype: True | None
     """
     # send string to web page
-    write_log("# [sending std out]:\t"+str(msg))
+    write_log("# [sending std out]:\t\t\t\t"+str(msg))
     # write_log(str(msg))
     stdout.write(str(msg)+'\n')
     stdout.flush()
@@ -90,97 +68,119 @@ def sendOut(msg):
 # --- --------------------------------------------------------------------------
 
 
-def getRequestId():
+def get_request_id():
     global REQ_ID
-    REQ_ID = REQ_ID + 1
+    REQ_ID += 1
     if REQ_ID == 256:
         REQ_ID = 1
     return REQ_ID
 
 
-def getSeqNumber():
+def get_msg_id():
+    global MSG_ID
+    MSG_ID += 1
+    if MSG_ID == 256:
+        MSG_ID = 0
+    return MSG_ID
+
+
+def get_sequence_number():
     global SEQ_NUM
-    SEQ_NUM = SEQ_NUM + 1
+    SEQ_NUM += 1
     if SEQ_NUM == 256:
         SEQ_NUM = 1
     return SEQ_NUM
 
-def getDestSeqNumber():
+
+def get_dest_sequence_number():
     global DEST_SEQ_NUM
-    DEST_SEQ_NUM = DEST_SEQ_NUM + 1
+    DEST_SEQ_NUM += 1
     if DEST_SEQ_NUM == 256:
         DEST_SEQ_NUM = 1
     return DEST_SEQ_NUM
 
 
-def clearRoutes():
+def clear_routes():
     global ROUTES
     global REVERSEROUTES
     ROUTES = []
     REVERSEROUTES = []
 
 
-def handleRRep(data):
+def handle_Rrep(data):
 
     write_log("# handle route reply")
 
 
-def findRoute(addr):
-    # manage route request
-    write_log("# ")
-
-
-def getRouteByDest(addr):
-    global ROUTES
-    for obj in ROUTES:
-        if obj["destination"] == addr:
+def get_obj_from_list_by(list, param, key: str):
+    for obj in list:
+        if obj[key] == param:
             return obj
     return None
 
 
-def getReverseRoute(addr, key):
+def get_route_by(param, key: str):
+    global ROUTES
+    r = get_obj_from_list_by(ROUTES, param, key)
+    if r != None and r["isValid"] == False:
+        return None
+    return r
+
+
+def get_reverse_route_by(param, key: str):
     global REVERSEROUTES
-    for obj in REVERSEROUTES:
-        if obj[key] == addr:
+    return get_obj_from_list_by(REVERSEROUTES, param, key)
+
+
+def get_route(address):
+    route = get_route_by(address, "destination")
+    if(route != None):
+        write_log("# route found:\t\t\t\t"+str(route))
+        return route
+
+    write_log("# no route found:\t\t\t\t"+str(address))
+    return None
+
+
+def find_message(rrep: Rrep):
+    global ACTIVE_REQUESTS
+    write_log("* active requests: "+str(ACTIVE_REQUESTS))
+    for obj in list(ACTIVE_REQUESTS["msg"]):
+        if(rrep.requestId == obj.messageId):
             return obj
     return None
 
 
-def haveRoute(addr):
-    route = getRouteByDest(addr)
-    if(route != None):
-        write_log("# route found:\t\t"+str(route))
-        return True
-    write_log("# no route found")
-    return False
-
-
-def addRoute(obj):
+def add_route(obj):
     global ROUTES
+
+    route = get_route(obj["destination"])
+    if route!=None:
+        if route["metric"] == obj["metric"] and route["nextHop"] == obj["nextHop"]:
+            return False
     ROUTES.append(obj)
-    response = openJson("table-wrapper.json")
+    response = open_json("table-wrapper.json")
     response["data"] = ROUTES
-    sendOut(json.dumps(response))
-    write_log("# route added")
+    send_out(json.dumps(response))
+    write_log("# route added: "+str(obj))
+
     return True
 
 
-def addReverseRoute(obj):
+def add_reverse_route(obj):
     global REVERSEROUTES
     REVERSEROUTES.append(obj)
-    response = openJson("table-wrapper.json")
+    response = open_json("table-wrapper.json")
     response["name"] = "reverse-rounting-table"
     response["data"] = REVERSEROUTES
-    sendOut(json.dumps(response))
-    write_log("# reverse route added")
+    send_out(json.dumps(response))
+    # write_log("# reverse route added")
     return True
 
 
-def send(serial, message, dest, addr=None):
+def send(serial, message, dest):
     m = "AT+DEST=" + dest + "\r\n"
-    if(addr != None):
-        rType = haveRoute(addr)
-    
+
     serial.write(m.encode())
     sleep(0.1)
     if verify_status(serial):
@@ -192,7 +192,7 @@ def send(serial, message, dest, addr=None):
         serial.write(sendMode.encode())
         if(verify_status(serial)):
             print("* sending...")
-            m = message + "\r\n"
+            m = message.decode("ascii") + "\r\n"
             serial.write(m.encode())
             verify_status(serial)
             return True
@@ -202,39 +202,37 @@ def send(serial, message, dest, addr=None):
         return False
 
 
-def setRX(serial):
+def set_rx(serial):
     rxMode = "AT+RX\r\n"
     serial.write(rxMode.encode())
     write_log("# set RX")
-    _serial = serial
     time.sleep(0.1)
-
     return True
 
 
 def sender():
-    write_log("# sending..")
-
-    setRX(_serial)
+    set_rx(SERIAL)
     while True:
-        if(verify_status(_serial) and _serial.in_waiting > 0):
-            reader(_serial)
+        if(verify_status(SERIAL) and SERIAL.in_waiting > 0):
+            reader(SERIAL)
 
 
 def reader(ser):
     s = ser.readline()
     # print(s)
-    write_log("# read message\t\t\t->\t"+str(s))
+    write_log("# read message: "+str(s))
     # send message trought websocket...
 
-    return s
+    return s.replace(b"\r\n", b"")
 
 
-def sendMessageObj(msg):
+def send_msg_object(msg: Msg, ack: bool = False):
     if msg != b"":
-        obj = openJson("message-obj.json")
-        obj["message"] = msg.decode("ascii")
-        sendOut(json.dumps(obj))
+        obj = open_json("message-obj.json")
+        obj["message"] = msg.text.decode("ascii")
+        obj["ack"] = ack
+        obj["id"] = msg.messageId
+        send_out(json.dumps(obj))
 
 
 def config(serial, address, _config):
@@ -256,18 +254,6 @@ def config(serial, address, _config):
     except:
         write_log("# config failed")
         return False
-
-
-def send_route_request(_from, prev, to, hop_count):
-    global PACKETS
-    write_log("# get route to:\t\t"+str(to))
-    addr = PACKETS.int_to_bits(ADDRESS, 8)
-    prevHopAddr = PACKETS.int_to_bits(ADDRESS, 8)
-    to_address = PACKETS.int_to_bits(to, 8)
-    h = hop_count + 1
-    hop_c = PACKETS.int_to_bits()
-    obj = PACKETS.get_rrep_packets(
-        b'11111111', prevHopAddr, REQ_ID, to_address, DEST_SEQ_NUM,)
 
 
 def verify_status(serial):
@@ -298,13 +284,13 @@ def reset(baud, port):
     write_log("# initalizing module\tport: "+port+"\tbaud:"+str(baud))
     global BAUD
     global PORT
-
+    global SERIAL
     BAUD = baud
     PORT = port
     _serial = serial.Serial()
     _serial.baudrate = baud  # 115200
     # _serial.port = '/dev/rfcomm0'
-
+    _serial.timeout = 5
     _serial.port = port  # '/dev/ttyS0'
     try:
         _serial.open()
@@ -312,15 +298,16 @@ def reset(baud, port):
         # config(_serial)
         write_log("# module initialized \r# baud\t" +
                   str(BAUD)+"\r# port\t"+_serial.name)
+        SERIAL = _serial
         return _serial
     except:
-        _error = openJson("error.json")
+        _error = open_json("error.json")
         _error["message"] = "Error occured during initialisation, please check port permissions of host, port name or if valid baudrate is setted"
-        sendOut(json.dumps(_error))
+        send_out(json.dumps(_error))
         return None
 
 
-def get_my_route():
+""" def get_my_route():
     myRoute = openJson("routing-table.json")
     myRoute["destination"] = ADDRESS
     myRoute["nextHop"] = ADDRESS
@@ -329,6 +316,47 @@ def get_my_route():
     myRoute["sequenceNumber"] = 0
     myRoute["isValid"] = True
     return myRoute
+ """
+
+
+def create_route_obj(dest, next_hop, precursors, metric, seq_num, is_valid: bool):
+    route = open_json("routing-table.json")
+    route["destination"] = dest
+    route["nextHop"] = next_hop
+    route["precursors"] = precursors
+    route["metric"] = metric
+    route["sequenceNumber"] = seq_num
+    route["isValid"] = is_valid
+    return route
+
+
+def create_reverse_route_obj(dest, source, id, metric, prevHop):
+    r_route = open_json("routing-table.json")
+    r_route["destination"] = dest
+    r_route["source"] = source
+    r_route["requestId"] = id
+    r_route["metric"] = metric
+    r_route["prevHop"] = prevHop
+    return r_route
+
+
+def pass_msg(msg):
+    global BAUD
+    global PORT
+    _msg = msg.decode("ascii")
+    if _msg == 'AT,OK' or _msg == "AT,SENDED" or _msg == "AT,SENDING" or _msg == "":
+        write_log("# msg not passed")
+        return False
+    elif _msg == "AT,OKERR:CPU_BUSY":
+        reset(BAUD, PORT)
+        return False
+    write_log("# msg passing: "+str(msg) + " as string:"+_msg)
+    return True
+
+
+def pop_message():
+    global ACTIVE_REQUESTS
+    ACTIVE_REQUESTS["msg"].pop(0)
 
 
 def serve():
@@ -336,12 +364,12 @@ def serve():
     listening on std in,
     std in messages -> json string
     """
-
+    global ADDRESS
     exit_cmd = 'exit'
     # global passphrase
     wrong_message_counter = 0
     write_log("# start server")
-    SER = None
+    _SERIAL = None
     _switch = False
     while True:
         # Websocket:
@@ -357,47 +385,260 @@ def serve():
             # ----------------------------------------------------
             # module settings
             if(request["name"] == "reset-module"):
-                SER = reset(request["baud"], request["port"])
-                if SER != None:
-                    sendOut(json.dumps(openJson("reset.json")))
+                _SERIAL = reset(request["baud"], request["port"])
+                if _SERIAL != None:
+                    send_out(json.dumps(open_json("reset.json")))
+                # SERIAL shouldn't be used after resetting, waiting for config -> _switch = True
                 _switch = False
             elif(request["name"] == "set-config"):
-                if SER != None:
-                    config(SER, request["address"], request["config"])
-                    sendOut(json.dumps(openJson("set-config.json")))
+                if _SERIAL != None:
+                    config(_SERIAL, request["address"], request["config"])
+                    send_out(json.dumps(open_json("set-config.json")))
                     _switch = True
-                    write_log("# check:\t"+str(_switch)+"\r# SERIAL:\t" +
-                              SER.name+"\r# "+str(verify_status(SER)))
-                    clearRoutes()
-                    addRoute(get_my_route())
-                    setRX(SER)
+                    clear_routes()
+                    add_route(create_route_obj(
+                        ADDRESS, ADDRESS, "", 0, 0, True))
+                    #send(SER, "init", "FFFFF")
+                    sleep(0.1)
+                    set_rx(_SERIAL)
             # ----------------------------------------------------
             # client messages
             else:
                 write_log("# handle client messages\t->\t"+requestRaw)
-                handleMessages(request, SER)
+                handle_client_messages(request, _SERIAL)
         elif _switch == True:
-            # write_log("# test")
-            if(SER.in_waiting > 0):
-                write_log("# in waiting")
-                msg = reader(SER)
-                if msg != b'':
-                    sendMessageObj(msg)
+            # incoming messages from module
+            if(_SERIAL.in_waiting > 0):
+                write_log("# in waiting: "+str(_SERIAL.in_waiting))
+                msg = reader(_SERIAL)
+                write_log("# msg: " + str(msg))
+                if pass_msg(msg):
+                    # sendMessageObj(msg)
+                    decoding_process(msg)
+            elif (LAST_CHECK - time.time()*1000.0) > 4999:
+                check_messages()
+
         else:
-            sleep(0.5)
+            sleep(0.1)
             write_log("# NO ACTION")
-            # SER.write("AT\r\n".encode())
-
-        # if(_serial.in_waiting > 0):
-        #    write_log("# message is inwaiting...")
-        #    msg = reader(_serial)
-        #    sendMessageObj(msg)
-        #    if msg != b'':
-        #        sendMessageObj(msg)
-    write_log("# serve stop")
 
 
-def handleMessages(request, serial):
+def get_by_value(key, value, arr):
+    _arr = []
+    for i in arr:
+        if i.toDict()[key] == value:
+            _arr.append(i)
+    return _arr
+
+
+def handle_route_request(rreq: Rreq):
+    global ACTIVE_REQUESTS
+    global ADDRESS
+    write_log("# handle route request:\t\t"+rreq.toDict())
+    from_addr = rreq.originAddress
+    if from_addr == ADDRESS:
+        return False
+    prev_hop = rreq.prevHopAddress
+    id = rreq.requestId
+    dest_addr = rreq.destAddress
+    arr = get_by_value("originAddress", from_addr, ACTIVE_REQUESTS["rrep"])
+    arr = get_by_value("requestId", id, arr)
+    arr = get_by_value("destinationAddress", dest_addr, arr)
+    print("# rreq arr: "+arr)
+    try:
+        arr[0]
+        return False
+    except IndexError:
+        write_log("# no request exists")
+        route = get_route(from_addr)
+        destRoute = get_route(dest_addr)
+        if from_addr == prev_hop and route == None:
+            route = create_route_obj(
+                from_addr, from_addr, from_addr, 1, rreq.originSequence, True)
+            add_route(route)
+        if destRoute != None:
+            rrep = Rrep(rreq.hopAddress, int(ADDRESS), rreq.requestId,
+                        rreq.destAddress, rreq.destSequence, 0 + int(destRoute["metric"]), ADDRESS)
+            rrep_b64 = encodeBase64(rrep.toIntArray())
+            send(SERIAL, rrep_b64, "FFFFF")
+            obj = open_json("message-obj.json")
+            obj["message"] = "# known route asked: " + \
+                route["destination"]+", next hop: " + rrep.hopAddress
+            send_out(json.dumps(obj))
+        else:
+            last = rreq.prevHopAddress
+            rreq.prevHopAddress = ADDRESS
+            rreq.hopCount += 1
+            r_route = create_reverse_route_obj(
+                rreq.destAddress, rreq.originAddress, rreq.requestId, rreq.hopCount, last)
+            add_reverse_route(r_route)
+            send(SERIAL, encodeBase64(rreq.toIntArray()), "FFFFF")
+            write_log("# not known route")
+        # ACTIVE_REQUESTS["rrep"].append(rreq)
+        # check if route to origin exsists -> no: add route to routin table
+        # check if dest route is own address -> yes: send route reply
+        #
+
+
+def decoding_process(msg):
+    # write_log("")
+    write_log("# decode base64 string: " + msg.decode("ascii"))
+    rType = msg.decode("ascii")[:4].encode("ascii")
+    write_log("# type: "+str(rType))
+    _hex = Packets.base64_to_hex(msg)
+    write_log("# hex:\t\t" + _hex)
+    _bin = Packets.hex_to_binary_bits(Packets, _hex)
+    write_log(_bin)
+    int_arr = decodeBase64(rType)
+    write_log(str(int_arr))
+    request_type = int(Packets.int_to_bits(int_arr[0], 8)[0:4], base=2)
+    request_flags = int(Packets.int_to_bits(int_arr[0], 8)[4:8], base=2)
+
+    write_log("*  request type:\t" + str(request_type))
+    write_log("* request flags:\t" + str(request_flags))
+
+    write_log(str(int_arr))
+    if request_type == 0:
+        req = parse_packet(decodeBase64(msg))
+        handle_route_request(req)
+        # check if route exists
+        # if exists return route reply
+        write_log("# route request detected")
+
+    elif request_type == 1:
+        int_arr = decodeBase64(msg)
+        write_log("# route reply detected")
+        handle_reply(parse_packet(int_arr))
+        # check route reply
+    elif request_type == 2:
+        write_log("# route error detected")
+        int_arr = decodeBase64(msg)
+    elif request_type == 3:
+        int_arr = decodeBase64(msg[:8])
+        handle_message(parse_packet(int_arr, msg[8:]))
+        write_log("# message detected")
+    elif request_type == 4:
+        int_arr = decodeBase64(msg)
+        m = ACTIVE_REQUESTS["msg"][0]
+        send_out(json.dumps(m.toDict()))
+        pop_message()
+        write_log("# ack detected")
+        # find message and pass to frontend
+        # delete message from active message
+
+    write_log("#  decoding msg:\t"+str(msg))
+    write_log("# - decoded msg:\t"+str(int_arr))
+
+
+def is_route_valid(reply: Rrep) -> bool:
+    global ACTIVE_REQUESTS
+    active_route_req = ACTIVE_REQUESTS["rreq"]
+    return True
+
+LAST_CHECK = time.time()*1000.0
+
+def check_messages():
+    global ACTIVE_REQUESTS
+    msgs = ACTIVE_REQUESTS["msg"]
+    # write_log()
+    try:
+        if msgs[0] != None:
+            write_log("# inwaiting message")
+            m = msgs[0]
+            if m.count < 3 and (m.timestamp - time.time()*1000.0) > 2999:
+                m.timestamp = time.time()*1000.0
+                m.count += 1
+                execute_message(m, find_route(m.destination))
+                return True
+            elif m.count >= 3:
+                obj = open_json("error.json")
+                obj["message"] = "message to " + \
+                    m.destinationAddress + " failed. Message: "+m.text
+                send_out(json.dumps(obj))
+                ACTIVE_REQUESTS["msg"].pop[0]
+                return False
+    except IndexError:
+        return False
+    return False
+
+
+def execute_message(msg: Msg, route):
+    write_log("# preparing execution of msg to route: "+str(route))
+    global ADDRESS
+    global SERIAL
+    msg.hopAddress = int(route["nextHop"])
+    msg.prevHopAddress = int(ADDRESS)
+    int_arr = msg.toIntArray()
+    b64 = encodeBase64(int_arr)
+    b64 += msg.text
+    write_log("# message:\t\t"+str(b64))
+    send(SERIAL, b64, "FFFFF")
+
+
+def get_rroute(address, id):
+    """ get smallest reverse route by dest address and request id
+    """
+    global REVERSEROUTES
+    arr = []
+    for i in REVERSEROUTES:
+        if i["requestId"] == id and i["destination"] == address:
+            arr.append(i)
+    obj = None
+    for o in arr:
+        if obj == None:
+            obj = o
+        elif obj["metic"] < o["metric"]:
+            obj = o
+    return obj
+
+
+def handle_reply(reply: Rrep) -> bool:
+    """handles incoming route reply
+    Args:
+        reply ([Rrep]): instance of Rrep Package
+    """
+    global ADDRESS
+    if(reply.hopAddress != int(ADDRESS)):
+        write_log("# reply not for my address")
+        return False
+    write_log("* reply:\t\t"+str(reply.toDict()))
+    r = reply.toDict()
+    write_log("* reply addr:\t\t"+str(reply.destAddress) +
+              " this addr:\t"+ADDRESS)
+    c = open_json("message-obj.json")
+    c["name"] = "system-message"
+    c["message"] = "got route reply to: " + \
+        str(reply.originAddress) + " for: " + str(reply.destAddress)
+    send_out(json.dumps(c))
+    if int(reply.destAddress) == int(ADDRESS):
+        write_log("# reply is addressed to this moudle: "+str(ADDRESS))
+        route = create_route_obj(reply.originAddress, reply.hopAddress,
+                                 reply.prevHopAddress, reply.hopCount, reply.destSequence, is_route_valid(reply))
+        add_route(route)
+        msg = find_message(reply)
+
+        write_log("# message found for route reply: "+str(msg.toDict()))
+        execute_message(msg, route)
+
+    elif int(reply.destAddress) != int(ADDRESS):
+        write_log("# reply isn't for my address "+str(ADDRESS) +
+                  ", scanning active route requests...")
+        rroute = get_rroute(reply.destAddress, reply.requestId)
+        route = create_route_obj(reply.originAddress, reply.prevHopAddress,
+                                 rroute["prevHop"], reply.hopCount+1, reply.originSequence, True)
+        add_route(route)
+        reply.hopAddress = rroute["prevHop"]
+        reply.prevHopAddress = ADDRESS
+        reply.hopCount += 1
+        send(SERIAL, encodeBase64(reply.toIntArray()), "FFFFF")
+    return True
+
+
+def handle_message():
+    write_log("# handle msg")
+
+
+def handle_client_messages(request, serial):
     global ADDRESS
     global PORT
     global BAUD
@@ -406,17 +647,17 @@ def handleMessages(request, serial):
         name = request["name"]
         if name == "init":
             write_log("# open-session")
-            current_session = session(str(uuid.uuid1()))
+            #current_session = session(str(uuid.uuid1()))
             # write_log(json.dumps(vars(current_session)))
-            init = openJson("init.json")
+            init = open_json("init.json")
             init["address"] = ADDRESS
             init["port"] = PORT
             init["baud"] = BAUD
-            sendOut(
+            send_out(
                 json.dumps(init))
         elif name == "client-message":
-            clientMsg(serial, request)
-            send(serial, request["message"], "FFFFF", request["destination"])
+            client_msg(serial, request)
+            #send(serial, request["message"], "FFFFF", request["destination"])
 
     else:
         write_log("# key error:             .....")
@@ -424,53 +665,84 @@ def handleMessages(request, serial):
         write_log("# ...................... .....")
 
 
-def checkRouteExists(routeDestination):
+def find_route(routeDestination):
     write_log("# check if route to "+str(routeDestination)+" exists")
     global ROUTES
     for route in ROUTES:
         if route["destination"] == routeDestination:
+            return route
+    return None
+
+# --- --------------------------------------------------------------------------
+
+
+def decoding(message):
+    print("# decode base64 string")
+    _hex = Packets.base64_to_hex(message)
+    print("= "+str(_hex))
+    _bin = Packets.hex_to_binary_bits(Packets, _hex)
+    return _bin
+
+
+def client_msg(serial, request, count=0):
+    global ADDRESS
+    global ACTIVE_REQUESTS
+    dest = int(request["destination"])
+    seq = get_sequence_number()
+    route = find_route(request["destination"])
+    if route != None:
+        write_log("existing route")
+        # send to route
+    else:
+        send_route_request(serial, request, seq)
+        # send route request to from
+
+
+def create_msg_from_json(request, id, seq):
+    dest = int(request["destination"])
+    m = request["message"]
+    msg = Msg(255, int(ADDRESS), dest, seq, id, m.encode("ascii"))
+    return msg
+
+
+def send_route_request(serial, request, seq):
+    global ACTIVE_REQUESTS
+    id = get_request_id()
+    msg = create_msg_from_json(request, id, seq)
+
+    r = Rreq(255, int(ADDRESS), id,
+             int(request["destination"]), get_dest_sequence_number(), 0, int(ADDRESS), seq)
+    ACTIVE_REQUESTS["rreq"].append(r)
+    ACTIVE_REQUESTS["msg"].append(msg)
+    send(serial, r.toBase64(), "FFFFF")
+    c = open_json("message-obj.json")
+    c["name"] = "system-message"
+    c["message"] = "route request made to address: "+request["destination"]
+    obj = r.getInfos()
+    send_out(json.dumps(c))
+
+
+def ignore_Rreq(rreq: Rreq) -> bool:
+    global ACTIVE_REQUESTS
+    for obj in list(ACTIVE_REQUESTS["rreq"]):
+        if rreq.requestId == obj.requestId and rreq.originAddress == obj.originAddress:
             return True
     return False
 
 
-def getRouteByDest(routeDestination):
-    write_log("# check if route to "+str(routeDestination)+" exists")
-    global ROUTES
-    for route in ROUTES:
-        if route["destination"] == routeDestination:
-            
-            write_log("# route "+str(routeDestination)+" exists")
-            return route
-    
-    write_log("# route to"+str(routeDestination)+" not existing")
-    return None
-# --- --------------------------------------------------------------------------
-
-
-def clientMsg(serial, request):
-    global ADDRESS
-    if checkRouteExists(request["destination"]):
-        write_log("existing route")
-    else:
-        req = Rreq(255, ADDRESS, getRequestId(), request["destination"], 0, ADDRESS, getSeqNumber())
-        send(serial,req.toBase64(),"fffff")
-        write_log("not existing route")
-        # send route request to from
-
-
-def getPathToObjects():
+def get_path_to_objects():
     return str(os.path.realpath(__file__)).replace(
         "service.py", "") + "obj/"
 
 
-def openJson(obj_name):
+def open_json(obj_name):
     """loads json object model
     :param path: path to json model
     :type path: str
     :rtype: dict
     """
     try:
-        _path = getPathToObjects() + obj_name
+        _path = get_path_to_objects() + obj_name
 
         # write_log("path -> "+_path)
         f = open(_path,)
@@ -481,41 +753,18 @@ def openJson(obj_name):
         return None
 
 
-def check_passphrase(passphrase):
-    check = "satis001"
-    if passphrase != check:
-        write_log("# ERROR => wrong passphrase detected: " + passphrase + check)
-        exit(-1)
-
-# --- --------------------------------------------------------------------------
-
-
 def main():
 
     try:
-
-        # write_log("# serial name -> "+serial.name)
-
         serve()
-        # write_log("# starting THREAD 1 started")
-        # t1 = threading.Thread(target=sender)
-        # t1.start()
-        # t0 = threading.Thread(target=receive)
-
-        # write_log("# starting THREAD 0 started")
-        # t0.start()
-        # t0.join()
-        # t1.join()
-        write_log("# programm stopped ...")
     except KeyboardInterrupt:
-        write_log("# programm stopped with exception ...")
-        write_log("# Shutdown requested via console")
+        write_log("# Shutdown requested by console key interrupt")
     except Exception:
         write_log("# programm stopped with exception ...")
-        traceback.print_exc(file=log_file)
+        traceback.print_exc(file=os.path.join(
+            os.path.dirname(__file__), 'log/service.log'))
     sys.exit(0)
 
 
 if __name__ == "__main__":
-    # _serial = reset()
     main()

@@ -61,8 +61,8 @@ export class Chat {
         sendButton.addEventListener("click", () => {
             if (this.verifyAddress()) {
                 this.sendOut(textInput.value, targetInput)
-                this.renderMessage(textInput.value, "out", `, <b>message to: ${targetInput.value}</b>`)
-                textInput.value = ""
+                /* this.renderMessage(textInput.value, "out", `, <b>message to: ${targetInput.value}</b>`)
+                textInput.value = "" */
             }
 
 
@@ -120,7 +120,7 @@ export class Chat {
         let rountingTableWr = document.createElement("div")
         rountingTableWr.classList.add("routing-table-wrapper")
         rountingTableWr.innerHTML = `
-        <div class="table-trigger no-select">routing table</div>
+        <div class="table-trigger no-select"><i class="fas fa-table"></i> routing table</div>
         <table class="routing-table">
             <thead class="routing-table-head">
                 <tr><th>destination</th><th>next hop</th><th>precursors</th><th>metric</th><th>seq #</th><th>is valid</th></tr>
@@ -138,7 +138,7 @@ export class Chat {
         let rountingTableWr = document.createElement("div")
         rountingTableWr.classList.add("routing-table-wrapper")
         rountingTableWr.innerHTML = `
-        <div class="table-trigger no-select">reverse routing table</div>
+        <div class="table-trigger no-select"><i class="fas fa-table"></i> reverse routing table</div>
         <table class="reverse-routing-table">
             <thead class="reverse-routing-table-head">
                 <tr><th>destination</th><th>source</th><th>req id</th><th>metric</th><th>prev hop</th></tr>

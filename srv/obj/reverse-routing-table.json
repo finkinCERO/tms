@@ -1,7 +1,7 @@
 {
     "destination": null,
     "source": null,
-    "rreqId": null,
+    "requestId": null,
     "metric": null,
     "previousHop": null
 }
