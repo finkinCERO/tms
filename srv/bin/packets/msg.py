@@ -6,6 +6,7 @@ import time
 
 class Msg:
     def __init__(self, hopAddress, prevHopAddress, destAddress, originSequence, msgId, text):
+        self.viewType = "default"
         self.hopAddress = hopAddress
         self.prevHopAddress = prevHopAddress
         self.destAddress = destAddress
@@ -39,12 +40,13 @@ class Msg:
     def toDict(self):
         obj = {}
         obj["name"] = "message"
+        obj["viewType"] = self.viewType
         obj["type"] = 3
         obj["flags"] = 0
         obj["hopAddress"] = self.hopAddress
         obj["prevHopAddress"] = self.prevHopAddress
-        obj["destinationAddress"] = self.destAddress
-        obj["originiatorSequence"] = self.originSequence
+        obj["destAddress"] = self.destAddress
+        obj["originSequence"] = self.originSequence
         obj["messageId"] = self.messageId
         obj["count"] = self.count
         obj["timestamp"] = self.timestamp

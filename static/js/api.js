@@ -68,8 +68,17 @@ function wss_onmessage(evt) {
         }
 
         else if (response.name == "message") {
-            console.log("response text:", response.text)
-            chat.renderMessage(`from: ${response.prevHopAddress}, to: ${response.destinationAddress} | message: ${response.text}`, "in")
+            console.log("response text:", response.text, "message", response.message)
+            if (response.hasOwnProperty("viewType")) {
+                if (response.viewType == "default")
+                    chat.renderMessage(`last hop node: ${response.prevHopAddress}, destination: ${response.destAddress} | message: ${response.text}`, "in")
+                else if (response.default == "bridge")
+                    chat.renderMessage(`(bridge) last hop node: ${response.prevHopAddress}, destination: ${response.destAddress} | message: ${response.text}`, "in")
+            } else
+                if (response.hasOwnProperty("message"))
+                    chat.renderMessage(`${response.message}`, "in")
+                else
+                    chat.renderMessage(`${response.text}`, "in")
         }
         else if (response.name == "set-config")
             chat.renderMessage(`${response.message} ${response.status}`, "system")
@@ -82,7 +91,7 @@ function wss_onmessage(evt) {
             chat.renderReverseRoutingTableRows(response.data)
         } else if (response.name == "error") {
             chat.renderMessage(`${response.message}`, "system")
-            chat.functionbar.dispatchEvent(new Event("config"))
+            //chat.functionbar.dispatchEvent(new Event("config"))
         } else if (response.name == "system-message") {
             console.log("# sytem message");
             chat.renderMessage(`${response.message}`, "system")

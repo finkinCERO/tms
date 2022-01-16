@@ -1,6 +1,7 @@
 #!/usr/bin/python3.8
 import os
 import json
+from packets.path import Path
 from packets.rreq import Rreq
 import base64
 from packets.rrep import Rrep
@@ -23,16 +24,6 @@ def write_log(msg):
     f.close()
 
 
-def toBinary(txt):
-    l, m = [], []
-    for i in txt:
-        l.append(ord(i))
-    for i in l:
-        m.append(int(bin(i)[2:]))
-    return m
-
-
-
 def prepareRouteRequest(obj):
     """[summary]
 
@@ -43,8 +34,6 @@ def prepareRouteRequest(obj):
 
     # return
 
-
-    
 
 def decodeBase64(b64_string):
     _bytes = base64.b64decode(b64_string)
@@ -61,7 +50,6 @@ def encodeBase64(int_arr):
     return result
 
 
-
 def create_reply_from_binary(binary):
     reply = Rrep(int(binary[8:16], base=2), int(
         binary[16:24], base=2), int(
@@ -70,30 +58,59 @@ def create_reply_from_binary(binary):
     return reply
 
 
+def isBase64(s):
+    try:
+        res = base64.b64encode(base64.b64decode(s))
+
+        return res.decode("ascii") == s
+    except Exception:
+        return False
+
+
 def parse_packet(int_arr, payload=None):
     type_and_flags = Packets.int_to_bits(int_arr[0], 8)
     _type = int(type_and_flags[0:4], base=2)
     _flags = int(type_and_flags[4:8], base=2)
     obj = None
+    write_log("# parse packet:\t"+str(int_arr))
     if _type == 0:
-        obj = Rreq(int_arr[1], int_arr[2], int_arr[3], int_arr[4],
-                   int_arr[5], int_arr[6], int_arr[7], int_arr[8])
+        return Rreq(int_arr[1], int_arr[2], int_arr[3], int_arr[4],
+                    int_arr[5], int_arr[6], int_arr[7], int_arr[8])
     elif _type == 1:
-        obj = Rrep(int_arr[1], int_arr[2], int_arr[3], int_arr[4],
-                   int_arr[5], int_arr[6], int_arr[7], int_arr[8])
+        return Rrep(int_arr[1], int_arr[2], int_arr[3], int_arr[4],
+                    int_arr[5], int_arr[6], int_arr[7], int_arr[8])
     elif _type == 2:
         # route error
+        hop = int_arr[1]
+        prevHop = int_arr[2]
+        pathCount = int_arr[3]
+        sequences = int_arr[4:]
+        sequences = sequences[:len(sequences)-1]
+        seq = []
+        i = 0
+        last = None
+        for sequence in list(sequences):
+            if i == 0:
+                last = sequence
+            elif i % 2 == 1:
+                p = Path(int(last), int(sequence))
+                seq.append(p)
+            i += 1
 
-        print("parsing route error")
+        print("= parsing route error: "+str(sequences))
+        
+        print("= parsing route error: "+str(seq))
+        return Rerr(hop, prevHop, pathCount, seq)
+
     elif _type == 3:
         # message
-        obj = Msg(int_arr[1], int_arr[2], int_arr[3],
-                  int_arr[4], int_arr[5], payload)
+        print("= parsing msg")
+        return Msg(int_arr[1], int_arr[2], int_arr[3],
+                   int_arr[4], int_arr[5], payload)
 
-        print("= parsing msg: "+str(obj.toDict()))
     elif _type == 4:
         # ack
-        print("parsing ack")
-        obj = Ack(int_arr[1], int_arr[2])
+        write_log("= parsing ack")
+        return Ack(int_arr[1], int_arr[2])
     return obj
     # ...

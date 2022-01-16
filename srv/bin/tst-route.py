@@ -47,9 +47,12 @@ def setRX(serial):
 
 
 def sender(serial):
+    global ADDRESS
     print("start AT test: proof of concept")
     print("-------------------------------")
-
+    req = Rreq(255,10,1,55,0,0,5,1)
+    req_b64 = encodeBase64(req.toIntArray()).decode("ascii")
+    send(serial,req_b64,"FFFFF")
     # setRX(serial)
     while True:
         # text = input("send: ")

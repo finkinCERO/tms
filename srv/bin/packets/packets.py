@@ -10,7 +10,7 @@ TYPE_ACK_HEADER = b'0100'
 class Packets:
 
     def get_generic_packet_header(type=None, flags=None, hop_address=None, prev_hop_address=None):
-
+        
         byte = type + flags + hop_address + prev_hop_address
         # if(type==b"0000" and flags==b"0000"):
         #    byte = hop_address + prev_hop_address
@@ -46,9 +46,10 @@ class Packets:
         return byte
 
     def get_error_packet_header(self, hop_address, prev_hop_address):
-
+        print("# hop: "+str(hop_address))
+        print("# hop: "+str(prev_hop_address))
         byte = self.get_generic_packet_header(
-            TYPE_REER_HEADER, b'0000', hop_address, prev_hop_address)
+            TYPE_REER_HEADER, b'0000', self.int_to_bits(hop_address,8), self.int_to_bits(prev_hop_address,8))
         return byte
 
     def get_msg_packet_header(self, hop_address, prev_hop_address):

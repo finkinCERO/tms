@@ -20,8 +20,8 @@ d = Packets.hex_to_binary_bits(Packets, c)
 
 print("##################")
 #reply = Rrep(3, 4, 3, 5, 6, 7, 2, 2)
-#request = Rreq(255, 4, 3, 5, 6, 7, 2, 2)
-
+request = Rreq(255, 4, 3, 5, 6, 7, 2, 2)
+request.toIntArray()
 # pack0.toBase64()
 #b = request.toBase64()
 #c = request.toDict()

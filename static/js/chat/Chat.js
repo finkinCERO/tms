@@ -224,7 +224,7 @@ export class Chat {
         configTxt.classList.add("input-label")
         let config = document.createElement("input")
         config.classList.add("config")
-        config.value = "433000000,5,6,12,4,1,0,0,0,0,3000,8,8"
+        config.value = "433920000,5,6,12,4,1,0,0,0,0,3000,8,8"
 
         let addrText = document.createElement("div")
 
@@ -293,13 +293,13 @@ export class Chat {
     }
     renderReverseRoutingTableRow(parent, data) {
         let row = document.createElement("tr")
+        console.log("data ->", data)
         row.innerHTML = `
         <td>${data.destination}</td>
         <td>${data.source}</td>
-        <td>${data.precursors}</td>
-        <td>${data.rreqId}</td>
+        <td>${data.requestId}</td>
         <td>${data.metric}</td>
-        <td>${data.previousHop}</td>
+        <td>${data.prevHop}</td>
         `
         parent.appendChild(row)
     }

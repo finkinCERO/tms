@@ -19,8 +19,8 @@ class Rrep:
         header = Packets.get_reply_packet_header(
             Packets, self.hopAddress, self.prevHopAddress)
         # print(str(header))
-        obj = header + Packets.int_to_bits(self.requestId, 8) + Packets.int_to_bits(self.destAddress, 8) + Packets.int_to_bits(
-            self.destSequence, 8) + Packets.int_to_bits(self.hopCount, 8) + Packets.int_to_bits(self.originAddress, 8) + Packets.int_to_bits(0, 8)
+        obj = header + Packets.int_to_bits(int(self.requestId), 8) + Packets.int_to_bits(int(self.destAddress), 8) + Packets.int_to_bits(
+            int(self.destSequence), 8) + Packets.int_to_bits(int(self.hopCount), 8) + Packets.int_to_bits(int(self.originAddress), 8) + Packets.int_to_bits(0, 8)
         print("# --route reply as byte: "+str(obj))
         return obj
 
@@ -51,7 +51,7 @@ class Rrep:
         obj["hopAddress"] = self.hopAddress
         obj["prevHopAddress"] = self.prevHopAddress
         obj["requestId"] = self.requestId
-        obj["destinationAddress"] = self.destAddress
+        obj["destAddress"] = self.destAddress
         obj["destinationSeqence"] = self.destSequence
         obj["hopCount"] = self.hopCount
         obj["originAddress"] = self.originAddress

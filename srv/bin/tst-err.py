@@ -10,11 +10,11 @@ from packets.ack import Ack
 from packets.rerr import Rerr
 from utilstst import decodeBase64, encodeBase64, parse_packet
 from packets.packets import Packets
-
+from packets.path import Path
 from packets.rrep import Rrep
 
 # _serial = None
-ADDRESS = 1
+ADDRESS = 2
 SENDBYTE = 0
 DEST_SEQ = 0
 SERIAL = None
@@ -32,9 +32,8 @@ def reader(ser):
 
 
 def send(_serial, message, dest):
-    global ADDRESS
     print("# -- send:\t\t" + str(message))
-    m = "LR,"+str(ADDRESS)+",0E,"+message + "\r\n"
+    m = message + "\r\n"
     _serial.write(m.encode())
     return True
 
@@ -50,6 +49,7 @@ def sender(serial):
     print("start AT test: proof of concept")
     print("-------------------------------")
 
+    #send(serial, msg_b64, "FFFFF")
     # setRX(serial)
     while True:
         # text = input("send: ")
@@ -155,16 +155,27 @@ def decoding(message):
         # check route reply
     elif request_type == 2:
         int_arr = decodeBase64(message)
+        ack = Ack(111, ADDRESS)
+        ack_b64 = encodeBase64(ack.toIntArray())
+        send(SERIAL,ack_b64.decode("ascii"),"FFFFF")
     elif request_type == 3:
         print("# msg detected")
         int_arr = decodeBase64(message[:8])
-        msg = Msg(int_arr[0], int_arr[1], int_arr[2],
-                  int_arr[3], int_arr[4], message[8:])
-        print("# message:\t\t"+str(msg.toDict()))
-        ack = Ack(111, ADDRESS)
+        msg = Msg(int_arr[1], int_arr[2], int_arr[3],
+                  int_arr[4], int_arr[5], message[8:])
+        ack = Ack(ADDRESS, ADDRESS+1)
         ack_b64 = encodeBase64(ack.toIntArray())
         send(SERIAL, ack_b64.decode("ascii"), "FFFFF")
-        print("# -decoded ack:\t\t"+str(decodeBase64(ack_b64)))
+        print("# -     message:\t\t"+str(msg.toDict()))
+        print("# - decoded ack:\t\t"+str(decodeBase64(ack_b64)))
+        path1 = Path(55, 0)
+        #path2 = Path(10, 2)
+        print("# 1. path to dict: "+str(path1.toDict()))
+        #print("# 2. path to dict: "+str(path2.toDict()))
+        print("# message: "+str(msg.toDict()))
+        rerr = Rerr(111, ADDRESS, 2, [path1])
+        rerr_b64 = encodeBase64(rerr.toIntArray())
+        send(SERIAL, rerr_b64.decode("ascii"), "FFFFF")
     elif request_type == 4:
         int_arr = decodeBase64(message)
         ack = parse_packet(int_arr)
@@ -179,9 +190,7 @@ def decoding(message):
 def handle(serial, message, byte):
     global SERIAL
     SERIAL = serial
-
     m = message.decode("ascii").replace("\r\n", "")
-
     if "AT+ADDR=" in m or "AT+CFG=" in m or "AT+RX" == m or m == "AT":
         send(serial, "AT,OK", "111")
     if "AT+DEST=" in m:
@@ -198,13 +207,6 @@ def handle(serial, message, byte):
             decoding(m)
         else:
             print("* not base base64 encoded...")
-
-
-def proceedMsg(serial, message):
-    try:
-        print("# --message:\t"+str(message))
-    except:
-        print("ERROR")
 
 
 def reset():

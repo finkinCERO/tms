@@ -97,7 +97,10 @@
     border-bottom: 1px solid #444444;
 }
 
-.message-timestamp {}
+.message-timestamp {
+    font-size: 0.5em;
+    padding: 0px 3px 0 3px;
+}
 
 .chat-messages-in {
     border: 1px solid #c4c4c4;

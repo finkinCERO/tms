@@ -3,5 +3,5 @@
     "source": null,
     "requestId": null,
     "metric": null,
-    "previousHop": null
+    "prevHop": null
 }

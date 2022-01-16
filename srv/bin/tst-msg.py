@@ -14,7 +14,7 @@ from packets.packets import Packets
 from packets.rrep import Rrep
 
 # _serial = None
-ADDRESS = 1
+ADDRESS = 2
 SENDBYTE = 0
 DEST_SEQ = 0
 SERIAL = None
@@ -32,9 +32,8 @@ def reader(ser):
 
 
 def send(_serial, message, dest):
-    global ADDRESS
     print("# -- send:\t\t" + str(message))
-    m = "LR,"+str(ADDRESS)+",0E,"+message + "\r\n"
+    m = message + "\r\n"
     _serial.write(m.encode())
     return True
 
@@ -49,7 +48,9 @@ def setRX(serial):
 def sender(serial):
     print("start AT test: proof of concept")
     print("-------------------------------")
-
+    msg = Msg(111, ADDRESS, 4, 1, 1, "Hello World")
+    msg_b64 = encodeBase64(msg.toIntArray()).decode("ascii") + msg.text
+    send(serial, msg_b64, "FFFFF")
     # setRX(serial)
     while True:
         # text = input("send: ")
@@ -160,10 +161,10 @@ def decoding(message):
         int_arr = decodeBase64(message[:8])
         msg = Msg(int_arr[0], int_arr[1], int_arr[2],
                   int_arr[3], int_arr[4], message[8:])
-        print("# message:\t\t"+str(msg.toDict()))
-        ack = Ack(111, ADDRESS)
+        ack = Ack(ADDRESS, ADDRESS+1)
         ack_b64 = encodeBase64(ack.toIntArray())
         send(SERIAL, ack_b64.decode("ascii"), "FFFFF")
+        print("# message text:\t\t"+str(msg.text))
         print("# -decoded ack:\t\t"+str(decodeBase64(ack_b64)))
     elif request_type == 4:
         int_arr = decodeBase64(message)
@@ -179,9 +180,7 @@ def decoding(message):
 def handle(serial, message, byte):
     global SERIAL
     SERIAL = serial
-
     m = message.decode("ascii").replace("\r\n", "")
-
     if "AT+ADDR=" in m or "AT+CFG=" in m or "AT+RX" == m or m == "AT":
         send(serial, "AT,OK", "111")
     if "AT+DEST=" in m:
@@ -198,13 +197,6 @@ def handle(serial, message, byte):
             decoding(m)
         else:
             print("* not base base64 encoded...")
-
-
-def proceedMsg(serial, message):
-    try:
-        print("# --message:\t"+str(message))
-    except:
-        print("ERROR")
 
 
 def reset():

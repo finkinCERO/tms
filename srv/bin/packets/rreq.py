@@ -15,6 +15,19 @@ class Rreq:
         self.originSequence = originSequence
         #self.asBase64 = self.toBase64()
 
+    def toDict(self):
+        obj = {}
+        obj["type"] = 0
+        obj["flags"] = 0 
+        obj["hopAddress"] = self.hopAddress
+        obj["prevHopAddress"] = self.prevHopAddress
+        obj["requestId"] = self.requestId
+        obj["destAddress"] = self.destAddress
+        obj["destSequence"] = self.destSequence
+        obj["hopCount"] = self.hopCount
+        obj["originAddress"] = self.originAddress
+        obj["originSequence"] = self.originSequence
+        return obj
     def toByte(self):
 
         header = Packets.get_request_packet_header(Packets,
@@ -43,19 +56,6 @@ class Rreq:
         print("# route request as base64:\t"+str(encoded))
         return encoded
 
-    def toDict(self):
-        obj = {}
-        obj["type"] = 0
-        obj["flags"] = 0 
-        obj["hopAddress"] = self.hopAddress
-        obj["prevHopAddress"] = self.prevHopAddress
-        obj["requestId"] = self.requestId
-        obj["destinationAddress"] = self.destAddress
-        obj["destinationSeqence"] = self.destSequence
-        obj["hopCount"] = self.hopCount
-        obj["originAddress"] = self.originAddress
-        obj["originSequence"] = self.originSequence
-        return obj
     def toIntArray(self):
         arr = []
         _bytes = self.toByte()
