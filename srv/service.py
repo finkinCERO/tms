@@ -25,7 +25,7 @@ CONFIG = "433920000,5,6,12,4,1,0,0,0,0,3000,8,8"
 ADDRESS = "111"
 BAUD = 115200
 # rfcomm0 | ttyS0
-PORT = "/dev/ttyS0"
+PORT = "/dev/rfcomm0"
 
 # lists
 ROUTES = []
@@ -719,10 +719,13 @@ def check_messages():
     sleep(random.randint(10, 100)/1000)
 
     try:
+        
         if msgs[0] != None:
             msg = msgs[0]
-            write_log("# inwaiting message: "+str(msg.toDict()))
-            return process_active_message(msg)
+            route = find_route(msg.destAddress)
+            if(route!=None):
+                write_log("# inwaiting message: "+str(msg.toDict()))
+                return process_active_message(msg)
     except IndexError:
 
         return False
