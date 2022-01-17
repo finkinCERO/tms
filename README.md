@@ -1,6 +1,6 @@
 # Start GUI
 * serial port is connected on `rfcomm0`
-* you have super user permissions
+* you have super user permissions or read/write access to `rfcomm0`
 
 ```bash
 $: sudo ./start.bash

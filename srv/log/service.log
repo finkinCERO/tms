@@ -1,0 +1,24 @@
+# Shutdown requested by console key interrupt
+# start server
+# client request		->	{"name":"init","uId":"7brtlepnbl6kyio03qx","token":null,"application":null,"domain":null}
+
+# handle client messages	->	{"name":"init","uId":"7brtlepnbl6kyio03qx","token":null,"application":null,"domain":null}
+
+# open-session
+# [sending std out]: {"name": "init", "address": 111, "port": "/dev/ttyS0", "baud": 115200}
+# NO ACTION
+# client request		->	{"name":"reset-module","baud":115200,"port":"/dev/ttyS0"}
+
+# init module port: /dev/ttyS0 | baud:115200
+# [sending std out]: {"name": "reset", "status": "success", "message": "serial module initialized:"}
+# NO ACTION
+# client request		->	{"name":"set-config","config":"433920000,5,6,12,4,1,0,0,0,0,3000,8,8","address":"111"}
+
+# entering config
+# read message: b''
+# ignoring return of module: b''
+# [sending std out]: {"name": "set-config", "status": "success", "message": "set config:", "address": null}
+# no route found:				111
+# [sending std out]: {"name": "routing-table", "data": [{"destination": 111, "nextHop": 111, "precursors": "", "metric": 0, "sequenceNumber": 0, "isValid": true}]}
+# route added: {'destination': 111, 'nextHop': 111, 'precursors': '', 'metric': 0, 'sequenceNumber': 0, 'isValid': True}
+# set RX

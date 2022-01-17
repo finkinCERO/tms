@@ -15,11 +15,6 @@ while :; do
       --staticdir=$htm_dir/ \
       --dir $bin_dir \
       --loglevel=debug >>$log_dir/websocket.log
-
-   #                    --ssl \
-   #                    --sslcert=$ssl_dir/satis.de.crt \
-   #                    --sslkey=$ssl_dir/satis.de.key \
-
    sleep 5
 done
 echo "Service stopped"
