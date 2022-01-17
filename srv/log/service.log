@@ -1,7 +1,8 @@
+# Shutdown requested by console key interrupt
 # start server
-# client request		->	{"name":"init","uId":"jihatrzkxxkyiyf82s","token":null,"application":null,"domain":null}
+# client request		->	{"name":"init","uId":"1ojizb3k3brkyj18qpj","token":null,"application":null,"domain":null}
 
-# handle client messages	->	{"name":"init","uId":"jihatrzkxxkyiyf82s","token":null,"application":null,"domain":null}
+# handle client messages	->	{"name":"init","uId":"1ojizb3k3brkyj18qpj","token":null,"application":null,"domain":null}
 
 # open-session
 # [sending std out]: {"name": "init", "address": 111, "port": "/dev/rfcomm0", "baud": 115200}
@@ -13,7 +14,6 @@
 
 # entering config
 # read message: b'AT,OK\r\n'
-# ignoring return of module: b'AT,OK'
 # [sending std out]: {"name": "set-config", "status": "success", "message": "set config:", "address": null}
 # no route found:				111
 # [sending std out]: {"name": "routing-table", "data": [{"destination": 111, "nextHop": 111, "precursors": "", "metric": 0, "sequenceNumber": 0, "isValid": true}]}
@@ -27,39 +27,279 @@
 # read message: b'AT,OK\r\n'
 # msg: b'AT,OK'
 # msg not passed
-# in waiting: 25
-# read message: b'LR,0112,0C,AP9wAG8AAHAB\r\n'
-# msg: b'LR,0112,0C,AP9wAG8AAHAB'
-# msg passing: b'LR,0112,0C,AP9wAG8AAHAB' as string:LR,0112,0C,AP9wAG8AAHAB
+# in waiting: 5
+# read message: b'LR,0007,11,hello from Node 7\r\n'
+# msg: b'LR,0007,11,hello from Node 7'
+# msg passing: b'LR,0007,11,hello from Node 7' as string:LR,0007,11,hello from Node 7
 # split message
-# decode base64 string: AP9wAG8AAHAB
-[0, 255, 112]
+# decode base64 string: hello from Node 7
+[133, 233, 101]
+*  request type:	8
+* request flags:	5
+* --------------
+[133, 233, 101]
+# decoding process finished.
+# --------------------------
+# in waiting: 1
+# read message: b'LR,0007,0C,AP8FAW8AAAUB\r\n'
+# msg: b'LR,0007,0C,AP8FAW8AAAUB'
+# msg passing: b'LR,0007,0C,AP8FAW8AAAUB' as string:LR,0007,0C,AP8FAW8AAAUB
+# split message
+# decode base64 string: AP8FAW8AAAUB
+[0, 255, 5]
 *  request type:	0
 * request flags:	0
 * --------------
-[0, 255, 112]
-# parse packet:	[0, 255, 112, 0, 111, 0, 0, 112, 1]
-# rreq to dict:{'type': 0, 'flags': 0, 'hopAddress': 255, 'prevHopAddress': 112, 'requestId': 0, 'destAddress': 111, 'destSequence': 0, 'hopCount': 0, 'originAddress': 112, 'originSequence': 1}
-# handle route request:		{'type': 0, 'flags': 0, 'hopAddress': 255, 'prevHopAddress': 112, 'requestId': 0, 'destAddress': 111, 'destSequence': 0, 'hopCount': 0, 'originAddress': 112, 'originSequence': 1}
+[0, 255, 5]
+# parse packet:	[0, 255, 5, 1, 111, 0, 0, 5, 1]
+# rreq to dict:{'type': 0, 'flags': 0, 'hopAddress': 255, 'prevHopAddress': 5, 'requestId': 1, 'destAddress': 111, 'destSequence': 0, 'hopCount': 0, 'originAddress': 5, 'originSequence': 1}
+# handle route request:		{'type': 0, 'flags': 0, 'hopAddress': 255, 'prevHopAddress': 5, 'requestId': 1, 'destAddress': 111, 'destSequence': 0, 'hopCount': 0, 'originAddress': 5, 'originSequence': 1}
 # no request exists
-(add) reverse routes: [{'destination': 111, 'source': 112, 'requestId': 0, 'metric': 1, 'prevHop': 112}]
-# [sending std out]: {"name": "reverse-routing-table", "data": [{"destination": 111, "source": 112, "requestId": 0, "metric": 1, "prevHop": 112}]}
-# reverse route: {'destination': 111, 'source': 112, 'requestId': 0, 'metric': 1, 'prevHop': 112}
+(add) reverse routes: [{'destination': 111, 'source': 5, 'requestId': 1, 'metric': 1, 'prevHop': 5}]
+# [sending std out]: {"name": "reverse-routing-table", "data": [{"destination": 111, "source": 5, "requestId": 1, "metric": 1, "prevHop": 5}]}
+# reverse route: {'destination': 111, 'source': 5, 'requestId': 1, 'metric': 1, 'prevHop': 5}
 # route found:				{'destination': 111, 'nextHop': 111, 'precursors': '', 'metric': 0, 'sequenceNumber': 0, 'isValid': True}
 # read message: b'AT,OK\r\n'
-# ignoring return of module: b'AT,OK'
 # [set send mode]:	AT+SEND=12
-# [message]		->	b'EP9vAG8AAG8A'
+# [message]		->	b'EAVvAQUAAG8A'
 # read message: b'AT,OK\r\n'
-# ignoring return of module: b'AT,OK'
 * AT return verified, sending message
 # read message: b'AT,SENDING\r\n'
-# ignoring return of module: b'AT,SENDING'
+# sending...
 # [sending std out]: {"name": "message", "message": "# (reply) known route asked: 111, next hop: 111"}
 # decoding process finished.
 # --------------------------
-# in waiting: 11
+# in waiting: 1
 # read message: b'AT,SENDED\r\n'
 # msg: b'AT,SENDED'
 # msg not passed
-# Shutdown requested by console key interrupt
+# in waiting: 3
+# read message: b'LR,0007,0D,MG8FbwUBhallo\r\n'
+# msg: b'LR,0007,0D,MG8FbwUBhallo'
+# msg passing: b'LR,0007,0D,MG8FbwUBhallo' as string:LR,0007,0D,MG8FbwUBhallo
+# split message
+# decode base64 string: MG8FbwUBhallo
+[48, 111, 5]
+*  request type:	3
+* request flags:	0
+* --------------
+[48, 111, 5]
+# message detected
+# parse packet:	[48, 111, 5, 111, 5, 1]
+= parsing msg
+# handle msg
+# read message: b'AT,OK\r\n'
+# [set send mode]:	AT+SEND=4
+# [message]		->	b'QAVv'
+# read message: b'AT,OK\r\n'
+* AT return verified, sending message
+# read message: b'AT,SENDING\r\n'
+# sending...
+# decoding process finished.
+# --------------------------
+# in waiting: 3
+# read message: b'AT,SENDED\r\n'
+# msg: b'AT,SENDED'
+# msg not passed
+# inwaiting message to exsting route: {'name': 'message', 'viewType': 'default', 'type': 3, 'flags': 0, 'hopAddress': 111, 'prevHopAddress': 5, 'destAddress': 111, 'originSequence': 5, 'messageId': 1, 'count': 0, 'timestamp': 1642444941590.194, 'text': 'hallo'}
+# [sending std out]: {"name": "message", "viewType": "default", "type": 3, "flags": 0, "hopAddress": 111, "prevHopAddress": 5, "destAddress": 111, "originSequence": 5, "messageId": 1, "count": 0, "timestamp": 1642444941590.194, "text": "hallo"}
+# client request		->	{"name":"client-message","message":"hello","destination":"5"}
+
+# handle client messages	->	{"name":"client-message","message":"hello","destination":"5"}
+
+# client message route: None
+# routes: [{'destination': 111, 'nextHop': 111, 'precursors': '', 'metric': 0, 'sequenceNumber': 0, 'isValid': True}]
+message: {'name': 'message', 'viewType': 'default', 'type': 3, 'flags': 0, 'hopAddress': 255, 'prevHopAddress': 111, 'destAddress': 5, 'originSequence': 1, 'messageId': 0, 'count': 0, 'timestamp': 1642444998872.1978, 'text': 'hello'}
+# read message: b'AT,OK\r\n'
+# [set send mode]:	AT+SEND=12
+# [message]		->	b'AP9vAAUAAG8B'
+# read message: b'AT,OK\r\n'
+* AT return verified, sending message
+# read message: b'AT,SENDING\r\n'
+# sending...
+# [sending std out]: {"name": "system-message", "message": "route request made to address: 5 | origin: 111"}
+# in waiting: 1
+# read message: b'AT,SENDED\r\n'
+# msg: b'AT,SENDED'
+# msg not passed
+# in waiting: 8
+# read message: b'LR,0112,0C,AP9vAAUAAW8B\r\n'
+# msg: b'LR,0112,0C,AP9vAAUAAW8B'
+# msg passing: b'LR,0112,0C,AP9vAAUAAW8B' as string:LR,0112,0C,AP9vAAUAAW8B
+# split message
+# decode base64 string: AP9vAAUAAW8B
+[0, 255, 111]
+*  request type:	0
+* request flags:	0
+* --------------
+[0, 255, 111]
+# parse packet:	[0, 255, 111, 0, 5, 0, 1, 111, 1]
+# rreq to dict:{'type': 0, 'flags': 0, 'hopAddress': 255, 'prevHopAddress': 111, 'requestId': 0, 'destAddress': 5, 'destSequence': 0, 'hopCount': 1, 'originAddress': 111, 'originSequence': 1}
+# handle route request:		{'type': 0, 'flags': 0, 'hopAddress': 255, 'prevHopAddress': 111, 'requestId': 0, 'destAddress': 5, 'destSequence': 0, 'hopCount': 1, 'originAddress': 111, 'originSequence': 1}
+# ignoring echo route request
+# decoding process finished.
+# --------------------------
+# in waiting: 1
+# read message: b'LR,0007,0C,EG8FAG8BAAUA\r\n'
+# msg: b'LR,0007,0C,EG8FAG8BAAUA'
+# msg passing: b'LR,0007,0C,EG8FAG8BAAUA' as string:LR,0007,0C,EG8FAG8BAAUA
+# split message
+# decode base64 string: EG8FAG8BAAUA
+[16, 111, 5]
+*  request type:	1
+* request flags:	0
+* --------------
+[16, 111, 5]
+# route reply detected
+# parse packet:	[16, 111, 5, 0, 111, 1, 0, 5, 0]
+* reply:		{'type': 1, 'flags': 0, 'hopAddress': 111, 'prevHopAddress': 5, 'requestId': 0, 'destAddress': 111, 'destinationSeqence': 1, 'hopCount': 1, 'originAddress': 5, 'originSequence': 0}
+* reply addr:		111 this addr:	111
+# [sending std out]: {"name": "system-message", "message": "got route reply to: 5 for: 111"}
+# reply is addressed to this moudle: 111
+# no route found:				5
+# [sending std out]: {"name": "routing-table", "data": [{"destination": 111, "nextHop": 111, "precursors": "", "metric": 0, "sequenceNumber": 0, "isValid": true}, {"destination": 5, "nextHop": 5, "precursors": "", "metric": 1, "sequenceNumber": 1, "isValid": true}]}
+# route added: {'destination': 5, 'nextHop': 5, 'precursors': '', 'metric': 1, 'sequenceNumber': 1, 'isValid': True}
+* active requests: {'rreq': [<bin.packets.rreq.Rreq object at 0x7f3a76b48400>], 'rrep': [], 'msg': [<bin.packets.msg.Msg object at 0x7f3a76b48490>], 'ack': [], 'rerr': []}
+# message found for route reply: {'name': 'message', 'viewType': 'default', 'type': 3, 'flags': 0, 'hopAddress': 255, 'prevHopAddress': 111, 'destAddress': 5, 'originSequence': 1, 'messageId': 0, 'count': 0, 'timestamp': 1642444998872.1978, 'text': 'hello'}
+# preparing execution of msg to route: {'destination': 5, 'nextHop': 5, 'precursors': '', 'metric': 1, 'sequenceNumber': 1, 'isValid': True}
+# message:		b'MAVvBQEAhello'
+# to string:		{'name': 'message', 'viewType': 'default', 'type': 3, 'flags': 0, 'hopAddress': 5, 'prevHopAddress': 111, 'destAddress': 5, 'originSequence': 1, 'messageId': 0, 'count': 0, 'timestamp': 1642444998872.1978, 'text': 'hello'}
+# read message: b'AT,OK\r\n'
+# [set send mode]:	AT+SEND=13
+# [message]		->	b'MAVvBQEAhello'
+# read message: b'AT,OK\r\n'
+* AT return verified, sending message
+# read message: b'AT,SENDING\r\n'
+# sending...
+# decoding process finished.
+# --------------------------
+# inwaiting message to exsting route: {'name': 'message', 'viewType': 'default', 'type': 3, 'flags': 0, 'hopAddress': 5, 'prevHopAddress': 111, 'destAddress': 5, 'originSequence': 1, 'messageId': 0, 'count': 0, 'timestamp': 1642444998872.1978, 'text': 'hello'}
+# preparing execution of msg to route: {'destination': 5, 'nextHop': 5, 'precursors': '', 'metric': 1, 'sequenceNumber': 1, 'isValid': True}
+# message:		b'MAVvBQEAhello'
+# to string:		{'name': 'message', 'viewType': 'default', 'type': 3, 'flags': 0, 'hopAddress': 5, 'prevHopAddress': 111, 'destAddress': 5, 'originSequence': 1, 'messageId': 0, 'count': 1, 'timestamp': 1642445021299.2534, 'text': 'hello'}
+# read message: b'AT,OK\r\n'
+# [set send mode]:	AT+SEND=13
+# [message]		->	b'MAVvBQEAhello'
+# read message: b'AT,ERR:RF_BUSY\r\n'
+# ignoring return of module: b'AT,ERR:RF_BUSY'
+* AT return verified, sending message
+# read message: b'AT,SENDED\r\n'
+# [sending std out]: {"name": "message", "viewType": "default", "type": 3, "flags": 0, "hopAddress": 5, "prevHopAddress": 111, "destAddress": 5, "originSequence": 1, "messageId": 0, "count": 1, "timestamp": 1642445021299.2534, "text": "hello"}
+# in waiting: 5
+# read message: b'LR,0007,0C,EG8FAG8BAAUA\r\n'
+# msg: b'LR,0007,0C,EG8FAG8BAAUA'
+# msg passing: b'LR,0007,0C,EG8FAG8BAAUA' as string:LR,0007,0C,EG8FAG8BAAUA
+# split message
+# decode base64 string: EG8FAG8BAAUA
+[16, 111, 5]
+*  request type:	1
+* request flags:	0
+* --------------
+[16, 111, 5]
+# route reply detected
+# parse packet:	[16, 111, 5, 0, 111, 1, 0, 5, 0]
+* reply:		{'type': 1, 'flags': 0, 'hopAddress': 111, 'prevHopAddress': 5, 'requestId': 0, 'destAddress': 111, 'destinationSeqence': 1, 'hopCount': 1, 'originAddress': 5, 'originSequence': 0}
+* reply addr:		111 this addr:	111
+# [sending std out]: {"name": "system-message", "message": "got route reply to: 5 for: 111"}
+# reply is addressed to this moudle: 111
+# route found:				{'destination': 5, 'nextHop': 5, 'precursors': '', 'metric': 1, 'sequenceNumber': 1, 'isValid': True}
+* active requests: {'rreq': [<bin.packets.rreq.Rreq object at 0x7f3a76b48400>], 'rrep': [], 'msg': [<bin.packets.msg.Msg object at 0x7f3a76b48490>], 'ack': [], 'rerr': []}
+# message found for route reply: {'name': 'message', 'viewType': 'default', 'type': 3, 'flags': 0, 'hopAddress': 5, 'prevHopAddress': 111, 'destAddress': 5, 'originSequence': 1, 'messageId': 0, 'count': 1, 'timestamp': 1642445021299.2534, 'text': 'hello'}
+# preparing execution of msg to route: {'destination': 5, 'nextHop': 5, 'precursors': '', 'metric': 1, 'sequenceNumber': 1, 'isValid': True}
+# message:		b'MAVvBQEAhello'
+# to string:		{'name': 'message', 'viewType': 'default', 'type': 3, 'flags': 0, 'hopAddress': 5, 'prevHopAddress': 111, 'destAddress': 5, 'originSequence': 1, 'messageId': 0, 'count': 1, 'timestamp': 1642445021299.2534, 'text': 'hello'}
+# read message: b'AT,OK\r\n'
+# [set send mode]:	AT+SEND=13
+# [message]		->	b'MAVvBQEAhello'
+# read message: b'AT,OK\r\n'
+* AT return verified, sending message
+# read message: b'AT,SENDING\r\n'
+# sending...
+# decoding process finished.
+# --------------------------
+# inwaiting message to exsting route: {'name': 'message', 'viewType': 'default', 'type': 3, 'flags': 0, 'hopAddress': 5, 'prevHopAddress': 111, 'destAddress': 5, 'originSequence': 1, 'messageId': 0, 'count': 1, 'timestamp': 1642445021299.2534, 'text': 'hello'}
+# preparing execution of msg to route: {'destination': 5, 'nextHop': 5, 'precursors': '', 'metric': 1, 'sequenceNumber': 1, 'isValid': True}
+# message:		b'MAVvBQEAhello'
+# to string:		{'name': 'message', 'viewType': 'default', 'type': 3, 'flags': 0, 'hopAddress': 5, 'prevHopAddress': 111, 'destAddress': 5, 'originSequence': 1, 'messageId': 0, 'count': 2, 'timestamp': 1642445036325.502, 'text': 'hello'}
+# read message: b'AT,OK\r\n'
+# [set send mode]:	AT+SEND=13
+# [message]		->	b'MAVvBQEAhello'
+# read message: b'AT,ERR:RF_BUSY\r\n'
+# ignoring return of module: b'AT,ERR:RF_BUSY'
+* AT return verified, sending message
+# read message: b'AT,SENDED\r\n'
+# [sending std out]: {"name": "message", "viewType": "default", "type": 3, "flags": 0, "hopAddress": 5, "prevHopAddress": 111, "destAddress": 5, "originSequence": 1, "messageId": 0, "count": 2, "timestamp": 1642445036325.502, "text": "hello"}
+# inwaiting message to exsting route: {'name': 'message', 'viewType': 'default', 'type': 3, 'flags': 0, 'hopAddress': 5, 'prevHopAddress': 111, 'destAddress': 5, 'originSequence': 1, 'messageId': 0, 'count': 2, 'timestamp': 1642445036325.502, 'text': 'hello'}
+# preparing execution of msg to route: {'destination': 5, 'nextHop': 5, 'precursors': '', 'metric': 1, 'sequenceNumber': 1, 'isValid': True}
+# message:		b'MAVvBQEAhello'
+# to string:		{'name': 'message', 'viewType': 'default', 'type': 3, 'flags': 0, 'hopAddress': 5, 'prevHopAddress': 111, 'destAddress': 5, 'originSequence': 1, 'messageId': 0, 'count': 3, 'timestamp': 1642445051337.5137, 'text': 'hello'}
+# read message: b'AT,OK\r\n'
+# [set send mode]:	AT+SEND=13
+# [message]		->	b'MAVvBQEAhello'
+# read message: b'AT,OK\r\n'
+* AT return verified, sending message
+# read message: b'AT,SENDING\r\n'
+# sending...
+# [sending std out]: {"name": "message", "viewType": "default", "type": 3, "flags": 0, "hopAddress": 5, "prevHopAddress": 111, "destAddress": 5, "originSequence": 1, "messageId": 0, "count": 3, "timestamp": 1642445051337.5137, "text": "hello"}
+# in waiting: 7
+# read message: b'AT,SENDED\r\n'
+# msg: b'AT,SENDED'
+# msg not passed
+# in waiting: 1
+# read message: b'LR,0007,04,QG8F\r\n'
+# msg: b'LR,0007,04,QG8F'
+# msg passing: b'LR,0007,04,QG8F' as string:LR,0007,04,QG8F
+# split message
+# decode base64 string: QG8F
+[64, 111, 5]
+*  request type:	4
+* request flags:	0
+* --------------
+[64, 111, 5]
+# parse packet:	[64, 111, 5]
+= parsing ack
+# ack: {'type': 4, 'flags': 0, 'hopAddress': 111, 'prevHopAddress': 5}
+# Active Requests: {'rreq': [<bin.packets.rreq.Rreq object at 0x7f3a76b48400>], 'rrep': [], 'msg': [<bin.packets.msg.Msg object at 0x7f3a76b48490>], 'ack': [], 'rerr': []}
+# [sending std out]: {"name": "message", "viewType": "default", "type": 3, "flags": 0, "hopAddress": 5, "prevHopAddress": 111, "destAddress": 5, "originSequence": 1, "messageId": 0, "count": 3, "timestamp": 1642445051337.5137, "text": "hello"}
+# ack detected
+# decoding process finished.
+# --------------------------
+# in waiting: 3
+# read message: b'LR,0007,04,QG8F\r\n'
+# msg: b'LR,0007,04,QG8F'
+# msg passing: b'LR,0007,04,QG8F' as string:LR,0007,04,QG8F
+# split message
+# decode base64 string: QG8F
+[64, 111, 5]
+*  request type:	4
+* request flags:	0
+* --------------
+[64, 111, 5]
+# parse packet:	[64, 111, 5]
+= parsing ack
+# ack: {'type': 4, 'flags': 0, 'hopAddress': 111, 'prevHopAddress': 5}
+# Active Requests: {'rreq': [<bin.packets.rreq.Rreq object at 0x7f3a76b48400>], 'rrep': [], 'msg': [], 'ack': [], 'rerr': []}
+# ERROR Active Requests: {'rreq': [<bin.packets.rreq.Rreq object at 0x7f3a76b48400>], 'rrep': [], 'msg': [], 'ack': [], 'rerr': []}
+# ack detected
+# decoding process finished.
+# --------------------------
+# in waiting: 8
+# read message: b'LR,0007,04,QG8F\r\n'
+# msg: b'LR,0007,04,QG8F'
+# msg passing: b'LR,0007,04,QG8F' as string:LR,0007,04,QG8F
+# split message
+# decode base64 string: QG8F
+[64, 111, 5]
+*  request type:	4
+* request flags:	0
+* --------------
+[64, 111, 5]
+# parse packet:	[64, 111, 5]
+= parsing ack
+# ack: {'type': 4, 'flags': 0, 'hopAddress': 111, 'prevHopAddress': 5}
+# Active Requests: {'rreq': [<bin.packets.rreq.Rreq object at 0x7f3a76b48400>], 'rrep': [], 'msg': [], 'ack': [], 'rerr': []}
+# ERROR Active Requests: {'rreq': [<bin.packets.rreq.Rreq object at 0x7f3a76b48400>], 'rrep': [], 'msg': [], 'ack': [], 'rerr': []}
+# ack detected
+# decoding process finished.
+# --------------------------
+# programm stopped with exception ...

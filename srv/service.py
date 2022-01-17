@@ -223,6 +223,7 @@ def send(serial, message, dest):
             verify_module_return(serial)
             return True
         else:
+            write_log("# module not ready yet")
             return False
     else:
         return False
@@ -277,18 +278,18 @@ def verify_module_return(serial):
     global CONFIG
     global BAUD
     global PORT
-    time.sleep(random.randint(150, 200)/1000)
-    status = reader(serial)
+    time.sleep(random.randint(10, 200)/1000)
+    status = reader(serial).replace(b"\r\n",b"")
     print("# verify status of module:\t"+status.decode("ascii"))
-    if(status == b'AT,OK\r\n' or status == b'AT,OK\n'):
+    if(status == b'AT,OK' or status == b'AT,OK'):
         return True
-    elif(status == b'AT,OKERR:CPU_BUSY\r\n'):
+    elif(status == b'AT,OKERR:CPU_BUSY'):
         _serial = reset(BAUD, PORT)
         config(_serial, ADDRESS, CONFIG)
         return False
-    elif(status == b'AT,SENDED\r\n'):
+    elif(status == b'AT,SENDED'):
         return True
-    elif(status == b'AT,SENDING\r\n'):
+    elif(status == b'AT,SENDING'):
         write_log("# sending...")
     elif (status == b'\r\n' or status == ''):
         write_log("# empty read, verifying")
@@ -350,7 +351,7 @@ def pass_msg(msg):
     global BAUD
     global PORT
     _msg = msg.decode("ascii")
-    if _msg == 'AT,OK' or _msg == "AT,SENDED" or _msg == "AT,SENDING" or _msg == "":
+    if _msg == 'AT,OK' or _msg == "AT,SENDED" or _msg == "AT,SENDING" or _msg == "" or _msg == "AT,ERR:RF_BUSY":
         write_log("# msg not passed")
         return False
     elif _msg == "AT,OKERR:CPU_BUSY":
@@ -436,7 +437,7 @@ def serve():
                     else:
                         decoding_process(msg)
 
-            elif (time.time()*1000.0 - LAST_CHECK) > 4999:
+            elif (time.time()*1000.0 - LAST_CHECK) > 15000:
                 check_messages()
 
         else:
@@ -451,26 +452,41 @@ def get_by_value(key, value, arr):
     return _arr
 
 
+def routes(rreq: Rreq, route):
+    global ADDRESS
+    if route != None:
+        rrep = Rrep(rreq.prevHopAddress, int(ADDRESS), rreq.requestId,
+                    rreq.originAddress, rreq.destSequence, 0 + int(route["metric"]), int(ADDRESS), 0)
+        rrep_b64 = encodeBase64(rrep.toIntArray())
+        send(SERIAL, rrep_b64, "FFFFF")
+        obj = open_json("message-obj.json")
+        obj["message"] = "# (reply) known route asked: " + \
+            str(route["destination"])+", next hop: " + str(route["nextHop"])
+        send_out(json.dumps(obj))
+    else:
+        write_log("# unknown route, rreq: "+str(rreq.toDict()))
+        write_log("# broadcasting route request to find path to: " +
+                  str(rreq.destAddress))
+        encoded = encodeBase64(rreq.toIntArray())
+        write_log("# encoded rreq: "+str(encoded))
+        send(SERIAL, encoded, "FFFFF")
+
 def handle_route_request(rreq: Rreq):
     global ACTIVE_REQUESTS
     global ADDRESS
     global SERIAL
     write_log("# handle route request:\t\t"+str(rreq.toDict()))
-    from_addr = rreq.originAddress
     # ignore echo route request
-    if from_addr == int(ADDRESS):
+    if rreq.originAddress == int(ADDRESS):
         write_log("# ignoring echo route request")
         return False
-    prev_hop = rreq.prevHopAddress
-    dest_addr = rreq.destAddress
-    id = rreq.requestId
+  
     rreq.hopCount += 1
-    count = rreq.hopCount
 
     write_log("# no request exists")
 
     # ignore request if known
-    if(check_reverse_route(rreq.requestId , rreq.originAddress)):
+    if(check_reverse_route(rreq.requestId, rreq.originAddress)):
         write_log("# route request is known")
         return False
     # create reverse route json object & add to list
@@ -479,10 +495,12 @@ def handle_route_request(rreq: Rreq):
     add_reverse_route(r_route)
     write_log("# reverse route: "+str(r_route))
     # check if you know a route to dest address
-    route = get_route(dest_addr)
+    route = get_route(rreq.destAddress)
+    last_hop_route = get_route(rreq.prevHopAddress)
+    origin_route = get_route(rreq.originAddress)
     if route != None:
-        rrep = Rrep(rreq.hopAddress, int(ADDRESS), rreq.requestId,
-                    rreq.destAddress, rreq.destSequence, 0 + int(route["metric"]), int(ADDRESS), 0)
+        rrep = Rrep(rreq.prevHopAddress, int(ADDRESS), rreq.requestId,
+                    rreq.originAddress, rreq.destSequence, 0 + int(route["metric"]), int(ADDRESS), 0)
         rrep_b64 = encodeBase64(rrep.toIntArray())
         send(SERIAL, rrep_b64, "FFFFF")
         obj = open_json("message-obj.json")
@@ -627,6 +645,7 @@ def decoding_process(msg):
                 if len(PRE) == 0:
                     write_log("# Active Requests: "+str(ACTIVE_REQUESTS))
                     m = ACTIVE_REQUESTS["msg"][0]
+                    ACTIVE_REQUESTS["msg"].pop(0)
                     send_out(json.dumps(m.toDict()))
                     pop_message()
                 else:
@@ -675,21 +694,23 @@ def process_active_message(msg: Msg):
     if msg.destAddress == int(ADDRESS):
         send_out(json.dumps(msg.toDict()))
         ACTIVE_REQUESTS["msg"].pop(0)
-    elif msg.count == 0 or (msg.count < 3 and (time.time()*1000.0 - msg.timestamp) > 2999):
-        msg.timestamp = time.time()*1000.0
-        msg.count += 1
+    elif msg.count == 0 or (msg.count < 3 and (time.time()*1000.0 - msg.timestamp) > 3000):
+       
         route = find_route(msg.destAddress)
         if route != None and route["isValid"]:
             execute_message(msg, route)
             send_out(json.dumps(msg.toDict()))
-            #ACTIVE_REQUESTS["msg"].pop(0)
+            msg.timestamp = time.time()*1000.0
+            msg.count += 1
+            # ACTIVE_REQUESTS["msg"].pop(0)
         else:
             write_log("# route error to: "+str(msg.destAddress))
         return True
     elif msg.count >= 3:
         obj = open_json("error.json")
         obj["message"] = "message to " + \
-            str(msg.destAddress) + " failed. Message: "+msg.text
+            str(msg.destAddress) + " failed. Message: " + \
+            str(msg.text.decode("ascii"))
         send_out(json.dumps(obj))
 
         routes = get_route_where_next_hop_is(msg.hopAddress)
@@ -714,17 +735,18 @@ def process_active_message(msg: Msg):
 
 def check_messages():
     global ACTIVE_REQUESTS
+    global LAST_CHECK
     msgs = ACTIVE_REQUESTS["msg"]
     # write_log()
-    sleep(random.randint(10, 100)/1000)
-
+    LAST_CHECK = time.time()*1000.0
     try:
-        
+
         if msgs[0] != None:
+            sleep(random.randint(10, 100)/1000)
             msg = msgs[0]
             route = find_route(msg.destAddress)
-            if(route!=None):
-                write_log("# inwaiting message: "+str(msg.toDict()))
+            if(route != None):
+                write_log("# inwaiting message to exsting route: "+str(msg.toDict()))
                 return process_active_message(msg)
     except IndexError:
 
@@ -744,6 +766,7 @@ def execute_message(msg: Msg, route):
     write_log("# message:\t\t"+str(msg_b64))
     write_log("# to string:\t\t"+str(msg.toDict()))
     send(SERIAL, msg_b64, "FFFFF")
+    msg.timestamp = time.time() * 1000.0
     return True
 
 
@@ -774,11 +797,11 @@ def handle_reply(reply: Rrep) -> bool:
     """
     global ADDRESS
     global REVERSEROUTES
+    reply.hopCount += 1
     if(reply.hopAddress != int(ADDRESS)):
         write_log("# ignore route reply")
         return False
     write_log("* reply:\t\t"+str(reply.toDict()))
-    r = reply.toDict()
     write_log("* reply addr:\t\t"+str(reply.destAddress) +
               " this addr:\t"+str(ADDRESS))
     # message to frontend
@@ -797,6 +820,7 @@ def handle_reply(reply: Rrep) -> bool:
 
         write_log("# message found for route reply: "+str(msg.toDict()))
         execute_message(msg, route)
+        
     # case 2: reply is dedicated to you, but to hop reply to next node
     elif int(reply.destAddress) != int(ADDRESS):
         write_log("# reply isn't for my address "+str(ADDRESS) +
@@ -823,8 +847,9 @@ def handle_message(msg: Msg):
     else:
         ack = Ack(msg.prevHopAddress, int(ADDRESS))
         send(SERIAL, encodeBase64(ack.toIntArray()), "FFFFF")
-        ACTIVE_REQUESTS["msg"].append(msg)
-        check_messages()
+        if msg.destAddress == int(ADDRESS):
+            ACTIVE_REQUESTS["msg"].append(msg)
+            #check_messages()
 
         return True
     # send ack
@@ -855,11 +880,11 @@ def handle_client_messages(request, serial):
 
 
 def find_route(routeDestination):
-    write_log("# check if route to "+str(routeDestination)+" exists")
+    # write_log("# check if route to "+str(routeDestination)+" exists")
     global ROUTES
     for route in ROUTES:
         if int(route["destination"]) == int(routeDestination):
-            write_log("# route exists...")
+            # write_log("# route exists...")
             return route
     return None
 
@@ -896,7 +921,7 @@ def client_msg(serial, request, count=0):
         write_log("# active messages: "+str(ACTIVE_REQUESTS["msg"]))
         # wait random between (0.01, 0.05) sec
         sleep(random.randint(10, 50)/1000)
-        check_messages()
+        #check_messages()
         # send to route
     else:
         SEQ_NUM = get_sequence_number()
