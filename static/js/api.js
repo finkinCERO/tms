@@ -61,7 +61,7 @@ function wss_onmessage(evt) {
 
         if (response.name == "init") {
             //alert("hello")
-            chat = new Chat(BODY, ws, response["address"], response["port"], response["baud"])
+            chat = new Chat(BODY, ws, response["address"], response["port"], response["baud"], response["config"])
             //diagramManager.getData("2020-01-01", "2020-12-07")
         } else if (response.name == "service-message") {
             chat.renderMessage(response.message, "in")

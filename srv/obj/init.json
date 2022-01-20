@@ -2,5 +2,7 @@
     "name": "init",
     "address": null,
     "port": null,
-    "baud":null
+    "baud":null,
+    "config":null
 }
+

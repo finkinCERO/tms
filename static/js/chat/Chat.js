@@ -1,10 +1,11 @@
 export class Chat {
-    constructor(parent, api, address, port, baud) {
+    constructor(parent, api, address, port, baud, config) {
         this.parent = parent
         this.api = api
         this.moduleAddress = address
         this.port = port
         this.baud = baud
+        this.configString = config
         this.init()
     }
     init() {
@@ -224,7 +225,7 @@ export class Chat {
         configTxt.classList.add("input-label")
         let config = document.createElement("input")
         config.classList.add("config")
-        config.value = "433920000,5,6,12,4,1,0,0,0,0,3000,8,8"
+        config.value = this.configString//"433920000,5,6,12,4,1,0,0,0,0,3000,8,8"
 
         let addrText = document.createElement("div")
 

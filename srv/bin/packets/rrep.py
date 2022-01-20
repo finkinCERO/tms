@@ -24,25 +24,8 @@ class Rrep:
         print("# --route reply as byte: "+str(obj))
         return obj
 
-    def toBase64(self):
-        byte_string = self.toByte()
-        hex_value = Packets.get_hex(byte_string)
-        print("# ---route reply as hex: "+hex_value)
-        try:
-            encoded = base64.b64encode(bytes.fromhex(hex_value))
-        except ValueError:
-            print("# -hex correction: "+'0'+hex_value)
-            encoded = base64.b64encode(bytes.fromhex('0'+hex_value))
-        print("# route reply as base64: "+str(encoded))
-        return encoded
-
-    def getInfos(self):
-        obj = {}
-        byte_string = self.toByte()
-        hex_value = Packets.get_hex(byte_string)
-        obj["hex"] = hex_value
-        obj["bytes"] = byte_string
-        return obj
+  
+  
 
     def toDict(self):
         obj = {}

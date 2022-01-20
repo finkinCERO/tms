@@ -23,19 +23,7 @@ def write_log(msg):
     f.write(msg+'\n')
     f.flush()
     f.close()
-
-
-def prepareRouteRequest(obj):
-    """[summary]
-
-    Args:
-        obj (dict): objects contains destination, 
-    """
-    print()
-
-    # return
-
-
+# BASE 64 STUFF
 def decodeBase64(b64_string):
     _bytes = base64.b64decode(b64_string)
     int_arr = [x for x in _bytes]
@@ -50,15 +38,6 @@ def encodeBase64(int_arr):
     print(result)
     return result
 
-
-def create_reply_from_binary(binary):
-    reply = Rrep(int(binary[8:16], base=2), int(
-        binary[16:24], base=2), int(
-            binary[24:32], base=2), int(binary[32:40], base=2), int(
-                binary[40:48], base=2), int(binary[48:56], base=2), int(binary[56:64], base=2), int(binary[64:72], base=2))
-    return reply
-
-
 def isBase64(s):
     try:
         res = base64.b64encode(base64.b64decode(s))
@@ -67,7 +46,9 @@ def isBase64(s):
     except Exception:
         return False
 
-
+# Parse Int Array to packet-object
+# returns a packet obj
+# payload only for message packet
 def parse_packet(int_arr, payload=None):
     type_and_flags = Packets.int_to_bits(int_arr[0], 8)
     _type = int(type_and_flags[0:4], base=2)
@@ -86,9 +67,8 @@ def parse_packet(int_arr, payload=None):
         prevHop = int_arr[2]
         pathCount = int_arr[3]
         sequences = int_arr[4:]
-        write_log("= 1. parsing route error: "+str(sequences))
         sequences = sequences[:len(sequences)-1]
-        write_log("= 2. parsing route error: "+str(sequences))
+        write_log("= 1. parsing route error: "+str(sequences))
         seq = []
         i = 0
         last = None

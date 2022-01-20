@@ -26,17 +26,6 @@ class Msg:
         print("# ---msg as byte:\t"+str(obj))
         return obj
 
-    def toBase64(self):
-        byte_string = self.toByte()
-        hex_value = Packets.get_hex(byte_string)
-        print("# ----msg as hex:\t"+hex_value)
-        try:
-            encoded = base64.b64encode(bytes.fromhex(hex_value))
-        except ValueError:
-            encoded = base64.b64encode(bytes.fromhex('0'+hex_value))
-        print("# -msg as base64:\t"+str(encoded))
-        return encoded
-
     def toDict(self):
         obj = {}
         obj["name"] = "message"

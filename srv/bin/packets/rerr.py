@@ -33,17 +33,6 @@ class Rerr:
         return Packets.get_error_packet_header(
             Packets, self.hopAddress, self.prevHopAddress)
 
-    def toBase64(self):
-        byte_string = self.toByte()
-        hex_value = Packets.get_hex(byte_string)
-        print("# -route error as hex:\t"+hex_value)
-        try:
-            encoded = base64.b64encode(bytes.fromhex(hex_value))
-        except ValueError:
-            encoded = base64.b64encode(bytes.fromhex('0'+hex_value))
-        print("# route error as base64:\t"+str(encoded))
-        return encoded
-
     def toDict(self):
         obj = {}
 

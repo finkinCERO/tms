@@ -37,24 +37,6 @@ class Rreq:
             self.hopCount, 8) + Packets.int_to_bits(self.originAddress, 8) + Packets.int_to_bits(self.originSequence, 8)
         print("# --route request as byte:\t"+str(obj))
         return obj
-    def getInfos(self):
-        obj={}
-        byte_string = self.toByte()
-        hex_value = Packets.get_hex(byte_string)
-        obj["hex"] = hex_value
-        obj["bytes"] = byte_string
-        return obj
-    def toBase64(self):
-        byte_string = self.toByte()
-        hex_value = Packets.get_hex(byte_string)
-        print("# ---route request as hex:\t"+hex_value)
-        try:
-            encoded = base64.b64encode(bytes.fromhex(hex_value))
-        except ValueError:
-            print("# ---------hex correction:\t"+'0'+hex_value)
-            encoded = base64.b64encode(bytes.fromhex('0'+hex_value))
-        print("# route request as base64:\t"+str(encoded))
-        return encoded
 
     def toIntArray(self):
         arr = []
